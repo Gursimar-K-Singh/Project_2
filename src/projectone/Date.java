@@ -9,7 +9,8 @@ import java.util.Calendar;
  *
  * Constants are defined for the leap year calculation and the number of days in specific months.
  *
- * @author AparnaSrinivas,GursimarSingh
+ * @author AparnaSrinivas
+ * @author GursimarSingh
  */
 public class Date implements Comparable<Date> {
     private int year, month, day;
@@ -209,6 +210,11 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * Checks if the date falls on a weekend (Saturday or Sunday).
+     *
+     * @return true if the date is a weekend, false otherwise.
+     */
     public boolean isWeekend() {
         Calendar cal = Calendar.getInstance();
         cal.set(this.year, this.month, this.day);
@@ -217,6 +223,11 @@ public class Date implements Comparable<Date> {
         return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
     }
 
+    /**
+     * Checks if the date is within six months from today.
+     *
+     * @return true if the date is within six months, false otherwise.
+     */
     public boolean isWithinSixMonths() {
         Calendar today = Calendar.getInstance(); // Get the current date
         Calendar sixMonthsLater = Calendar.getInstance(); // Create a calendar for six months later
@@ -228,6 +239,11 @@ public class Date implements Comparable<Date> {
         return dateToCheck.before(sixMonthsLater) || dateToCheck.equals(sixMonthsLater);
     }
 
+    /**
+     * Test cases for the Date class.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         // Test cases
         Date date1 = new Date(1, 32, 2025);// Invalid as Jan has only 31 days

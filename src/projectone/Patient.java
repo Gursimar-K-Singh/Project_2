@@ -1,20 +1,48 @@
 package projectone;
 
-//@author AparnaSrinivas @author GursimarSingh
+/**
+ * The Patient class represents a patient in the medical record system.
+ * It contains the patient's profile and a linked list of visits.
+ * The class provides methods for adding visits, calculating total charges,
+ * and comparing patients based on their profiles.
+ *
+ * This class also implements the Comparable interface, allowing comparison between patients
+ * based on their profiles. The total charge for a patient is calculated based on the
+ * specialty of the providers in their visits.
+ *
+ * @author AparnaSrinivas
+ * @author GursimarSingh
+ */
 public class Patient implements Comparable<Patient> {
     private Profile profile;
     private Visit visits;
 
+    /**
+     * Constructs a Patient object with the specified profile.
+     * Initializes the visit list as empty.
+     *
+     * @param profile The profile of the patient.
+     */
     public Patient(Profile profile) {
         this.profile = profile;
         this.visits = null;//empty list
     }
 
+    /**
+     * Returns the profile of the patient.
+     *
+     * @return The patient's profile.
+     */
     public Profile getProfile() {
         return profile;
     }
 
-    //compare patients by profiles
+    /**
+     * Compares this patient to another patient based on their profiles.
+     *
+     * @param obj The object to compare with this patient.
+     * @return true if the profiles are equal, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if(this == obj){
@@ -28,6 +56,13 @@ public class Patient implements Comparable<Patient> {
         return false;
     }
 
+    /**
+     * Adds a new visit to the patient's visit list.
+     * If the list is empty, the visit is set as the head.
+     * Otherwise, the new visit is added to the end of the list.
+     *
+     * @param visit The visit to add to the patient's visit list.
+     */
     public void addVisit(Visit visit) {
         if (visits == null) {
             visits = visit; // If there are no visits yet, set it as the head
@@ -41,6 +76,12 @@ public class Patient implements Comparable<Patient> {
         }
     }
 
+    /**
+     * Calculates the total charge for the patient based on their visits.
+     * Each visit contributes to the total charge, determined by the provider's specialty.
+     *
+     * @return The total charge for all visits.
+     */
     public int charge() {
         int total = 0;
         Visit current = visits;//first visit - traversing start point
@@ -51,17 +92,28 @@ public class Patient implements Comparable<Patient> {
         return total;
     }
 
+    /**
+     * Returns a string representation of the patient, using the profile's toString method.
+     *
+     * @return A string representing the patient's profile.
+     */
     @Override
     public String toString() {
         return profile.toString();//profile class's toString()
     }
 
+    /**
+     * Compares this patient with another patient based on their profiles.
+     * Delegates the comparison to the Profile class's compareTo method.
+     *
+     * @param other The other patient to compare with.
+     * @return A negative integer, zero, or a positive integer as this patient
+     *         is less than, equal to, or greater than the specified patient.
+     */
     @Override
     public int compareTo(Patient other) {
         return this.profile.compareTo(other.profile);//profile class's compareTo()
     }
-
-    //method calculates total charge due depending on patient's visits
 
 }
 

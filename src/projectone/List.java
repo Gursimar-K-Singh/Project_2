@@ -1,7 +1,17 @@
 package projectone;
 
-//List.java
-//@author AparnaSrinivas @authorGursimarSingh
+/**
+ * The List class represents a dynamic collection of Appointment objects.
+ * It provides methods to add, remove, and manipulate appointments, as well as
+ * sort them by various criteria such as patient profile, location, and date.
+ * This class automatically grows the internal array when it reaches capacity.
+ * It also supports checking the availability of appointments for specific providers.
+ *
+ * Implements custom sorting methods for sorting appointments by patient, location, and date.
+ *
+ * @author AparnaSrinivas
+ * @author GursimarSingh
+ */
 
 public class List {
     private static final int INITIAL_CAPACITY = 10;
@@ -9,16 +19,27 @@ public class List {
     private Appointment[] appointments;
     private int size;
 
-    // Constructor
+    // Constructor, empty list with initial capacity
     public List() {
         appointments = new Appointment[INITIAL_CAPACITY];
         this.size = 0;
     }
 
+    /**
+     * Returns the current size of the list (number of appointments).
+     *
+     * @return The number of appointments in the list.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Returns the Appointment at the specified index in the list.
+     *
+     * @param index The index of the Appointment to return.
+     * @return The Appointment at the specified index, or null if the index is out of bounds.
+     */
     public Appointment get(int index) {
         if (index < 0 || index >= size) {
             return null; // or throw an exception if you prefer
@@ -26,6 +47,12 @@ public class List {
         return appointments[index];
     }
 
+    /**
+     * Finds the index of the specified appointment in the list.
+     *
+     * @param appointment The appointment to find.
+     * @return The index of the appointment, or NOT_FOUND if the appointment is not in the list.
+     */
     private int find(Appointment appointment) {
 
         for (int i = 0; i < size; i++) {
@@ -38,6 +65,12 @@ public class List {
         return NOT_FOUND;
     }
 
+    /**
+     * Checks whether the specified appointment time is available for a provider.
+     *
+     * @param appointment The appointment to check for availability.
+     * @return true if the timeslot for the provider is available, false otherwise.
+     */
     public boolean isAvailable(Appointment appointment) {
         for (int i = 0; i < size; i++) {
             // Check if the date, timeslot, and provider are the same
@@ -50,6 +83,9 @@ public class List {
         return true; // The provider is available at the specified timeslot
     }
 
+    /**
+     * Grows the internal array of appointments by increasing its capacity by 4.
+     */
     private void grow() {
         Appointment[] newAppointments = new Appointment[appointments.length + 4];
         for (int i = 0; i < size; i++) {
@@ -58,12 +94,24 @@ public class List {
         appointments = newAppointments;
     }
 
+    /**
+     * Checks if the specified appointment is in the list.
+     *
+     * @param appointment The appointment to check.
+     * @return true if the appointment is in the list, false otherwise.
+     */
     public boolean contains(Appointment appointment) {
 
         return find(appointment) != NOT_FOUND;
 
     }
 
+    /**
+     * Adds the specified appointment to the list.
+     * If the list is full, the internal array is automatically resized.
+     *
+     * @param appointment The appointment to add.
+     */
     public void add(Appointment appointment) {
         if (size == appointments.length) {
             grow();
@@ -72,6 +120,11 @@ public class List {
         size++;
     }
 
+    /**
+     * Removes the specified appointment from the list.
+     *
+     * @param appointment The appointment to remove.
+     */
     public void remove(Appointment appointment) {
         int index = find(appointment);
         if (index != NOT_FOUND) {
@@ -83,6 +136,12 @@ public class List {
         }
     }
 
+    /**
+     * Removes and returns the first appointment in the list.
+     * If the list is empty, prints a message and returns null.
+     *
+     * @return The first appointment, or null if the list is empty.
+     */
     public Appointment removeFirst() {
         if (size == 0) {
             System.out.println("List is empty, nothing to remove.");
@@ -102,7 +161,9 @@ public class List {
     }
 
 
-
+    /**
+     * Prints all appointments in the list, sorted by patient profile (last name, then first name).
+     */
     public void printByPatient() {
         // creating sorting algorithm
         profileSort();
@@ -121,6 +182,9 @@ public class List {
 
     }
 
+    /**
+     * Prints all appointments in the list, sorted by provider's location (county).
+     */
     public void printByAppointment() {
         // create sorting algorithm
         AptDateSort();
@@ -130,7 +194,9 @@ public class List {
 
     }
 
-
+    /**
+     * Sorts the appointments by patient profile (last name, then first name).
+     */
     private void profileSort() {
         int new_len = size - 1;
         for (int i = 0; i < new_len; i++) {
@@ -157,6 +223,9 @@ public class List {
         }
     }
 
+    /**
+     * Sorts the appointments by appointment date, timeslot, and provider.
+     */
     private void AptDateSort() {
         for (int i = 0; i < size - 1; i++) {
             for (int j = 0; j < size - 1 - i; j++) {
@@ -179,6 +248,9 @@ public class List {
         }
     }
 
+    /**
+     * Sorts the appointments by provider's location (county).
+     */
     private void CountySort() {
         int n = size; // size refers to the number of appointments in the list
         for (int i = 0; i < size - 1; i++) {

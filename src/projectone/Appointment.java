@@ -1,7 +1,14 @@
 package projectone;
 
 import java.util.Objects;
-//@author AparnaSrinivas @author GursimarSingh
+/**
+ * The Appointment class represents an appointment at the clinic. It includes information
+ * about the appointment date, timeslot, the patient, and the provider.
+ * Implements the Comparable interface to compare appointments based on date, timeslot, and patient profile.
+ *
+ * @author AparnaSrinivas
+ * @author GursimarSingh
+ */
 
 public class Appointment implements Comparable<Appointment> {
     private Date date;

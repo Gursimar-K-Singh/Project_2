@@ -5,17 +5,51 @@ import java.text.DecimalFormat;
 
 import java.util.ServiceLoader;
 
+/**
+ * The Scheduler class manages the scheduling, rescheduling, and cancellation of appointments.
+ * It also handles printing appointments, managing patient records, and generating billing statements.
+ * The class is the core of the scheduling system, providing various commands to manage appointments and records.
+ *
+ * Commands include:
+ * - "S" to schedule an appointment
+ * - "C" to cancel an appointment
+ * - "R" to reschedule an appointment
+ * - "PA" to print appointments ordered by date/time/provider
+ * - "PP" to print appointments ordered by patient/date/time
+ * - "PL" to print appointments ordered by county/date/time
+ * - "PS" to print billing statements
+ * - "Q" to quit the scheduler
+ *
+ * The class uses a List to store appointments and a MedicalRecord to store patient details.
+ *
+ * @see List
+ * @see MedicalRecord
+ * @see Appointment
+ * @see Profile
+ * @see Provider
+ * @see Timeslot
+ *
+ * @author AparnaSrinivas
+ * @author GursimarSingh
+ */
 public class Scheduler {
     public static List appointmentList;
     private Scanner scanner;
     public static MedicalRecord medicalRecord;
 
+    /**
+     * Constructor for Scheduler.
+     * Initializes an empty appointment list and a medical record with an initial capacity of 10.
+     */
     public Scheduler() {
          appointmentList = new List();
          medicalRecord = new MedicalRecord(10);;
     }
 
-
+    /**
+     * Runs the scheduler, providing an interactive interface for managing appointments.
+     * Reads commands from the user, executes the corresponding actions, and keeps running until the "Q" command is received.
+     */
     public void run() {
         Scanner sc = new Scanner(System.in);
         boolean running = true;
@@ -87,6 +121,12 @@ public class Scheduler {
     }
 
 
+    /**
+     * Schedules an appointment based on the input tokens.
+     * Validates the date, timeslot, and provider availability before adding the appointment to the list.
+     *
+     * @param tokens The input tokens representing the appointment details.
+     */
     private static void scheduleAppointment(String[] tokens){
         if (tokens.length != 7) {
             System.out.println("Invalid Command");
@@ -148,6 +188,17 @@ public class Scheduler {
 
     }
 
+    /**
+     * Validates the appointment date and ensures it meets scheduling rules such as:
+     * - The date is not in the past
+     * - The date is not today
+     * - The date is not a weekend
+     * - The date is within six months from today
+     *
+     * @param dateStr The appointment date as a string.
+     * @return true if the date is valid, false otherwise.
+     */
+
     private static boolean validateAppointmentDate(String dateStr) {
         Date appointmentDate = parseDate(dateStr);
 
@@ -178,6 +229,12 @@ public class Scheduler {
         return str != null && str.matches("\\d+");
     }
 
+    /**
+     * Checks if the given time slot is valid.
+     *
+     * @param timeslotStr The time slot as a string.
+     * @return true if the time slot is valid, false otherwise.
+     */
     private static boolean isValidTimeSlot(String timeslotStr) {
         // Check if the timeslot string is numeric
         if (!isNumeric(timeslotStr)) {
@@ -194,6 +251,12 @@ public class Scheduler {
         return true; // Valid timeslot
     }
 
+    /**
+     * Checks if the provided date of birth is valid and in the past.
+     *
+     * @param dobStr The date of birth as a string.
+     * @return true if the date of birth is valid, false otherwise.
+     */
     private static boolean checkDOB(String dobStr) {
         Date dob = parseDate(dobStr);
 
@@ -220,6 +283,12 @@ public class Scheduler {
         return true; // DOB is valid
     }
 
+    /**
+     * Checks if the given provider name exists in the system.
+     *
+     * @param providerName The name of the provider.
+     * @return true if the provider exists, false otherwise.
+     */
     private static boolean checkProvider(String providerName) {
         // Iterate through all providers in the Provider enum
         for (Provider provider : Provider.values()) {
@@ -233,7 +302,7 @@ public class Scheduler {
 
 
 
-    // creates a date
+
     private static Date parseDate(String dateStr) {
         String[] dateTokens = dateStr.split("/");
         if (dateTokens.length != 3) {
@@ -333,6 +402,11 @@ public class Scheduler {
         return null; // Return null if no matching appointment is found
     }
 
+    /**
+     * Reschedules an existing appointment to a new timeslot based on the input tokens.
+     *
+     * @param tokens The input tokens representing the rescheduling details.
+     */
     private static void rescheduleAppointment(String[] tokens) {
         if (tokens.length != 7) {
             System.out.println("Invalid command.");
@@ -416,6 +490,10 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Prints the billing statements for all patients in the system.
+     * The statements are sorted by patient name and include the total amount due.
+     */
     private void printBillingStatements() {
         System.out.println("\n** Billing statement ordered by patient **");
         moveAppointmentsToMedicalRecord();
