@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The RunProject1 class serves as the entry point for the application.

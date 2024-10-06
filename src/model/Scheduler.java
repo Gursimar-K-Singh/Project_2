@@ -1,9 +1,7 @@
-package projectone;//author @AparnaSrinivas author @GursimarSingh
+package model;//author @AparnaSrinivas author @GursimarSingh
 import java.util.Scanner;
 import java.util.Calendar;
 import java.text.DecimalFormat;
-
-import java.util.ServiceLoader;
 
 /**
  * The Scheduler class manages the scheduling, rescheduling, and cancellation of appointments.

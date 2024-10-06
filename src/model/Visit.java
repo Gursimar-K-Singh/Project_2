@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 //@author AparnaSrinivas @author GursimarSingh
 public class Visit {

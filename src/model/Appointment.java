@@ -1,6 +1,5 @@
-package projectone;
+package model;
 
-import java.util.Objects;
 /**
  * The Appointment class represents an appointment at the clinic. It includes information
  * about the appointment date, timeslot, the patient, and the provider.

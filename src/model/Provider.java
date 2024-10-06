@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The Provider enum represents healthcare providers, each associated with a specific location and specialty.

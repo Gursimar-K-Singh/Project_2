@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The Patient class represents a patient in the medical record system.

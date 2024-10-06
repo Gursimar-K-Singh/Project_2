@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The Profile class represents an individual's profile with a first name, last name, and date of birth.

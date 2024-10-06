@@ -1,5 +1,5 @@
 //@author AparnaSrinivas @author GursimarSingh
-package projectone;
+package model;
 import java.util.Calendar;
 /**
  * The Date class represents a specific date consisting of year, month, and day.

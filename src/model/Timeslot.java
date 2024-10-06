@@ -1,4 +1,4 @@
-package projectone;
+package model;
 //@author AparnaSrinivas @author GursimarSingh
 public enum Timeslot {
     SLOT1(9, 0),

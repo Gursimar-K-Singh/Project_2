@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The List class represents a dynamic collection of Appointment objects.

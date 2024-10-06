@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The Location enum represents various locations where providers operate.

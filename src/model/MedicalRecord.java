@@ -1,4 +1,4 @@
-package projectone;
+package model;
 
 /**
  * The MedicalRecord class represents a collection of Patient objects. It provides functionality
