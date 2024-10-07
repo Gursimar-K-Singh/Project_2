@@ -1,49 +1,103 @@
 package model;
 //@author AparnaSrinivas @author GursimarSingh
-public enum Timeslot {
-    SLOT1(9, 0),
-    SLOT2(10, 45),
-    SLOT3(11, 15),
-    SLOT4(13, 30),
-    SLOT5(15, 0),
-    SLOT6(16, 15);
+/**
+ * The Timeslot class represents a specific time during the day, identified by
+ * the hour and minute in 24-hour format. It provides methods for comparing timeslots
+ * and converting the timeslot to a readable string format (e.g., "09:30 AM").
+ *
+ * This class also provides several predefined static instances representing
+ * common appointment times.
+ *
+ * It implements the Comparable interface, allowing timeslots to be compared based on
+ * chronological order (hours and minutes).
+ * @author AparnaSrinivas
+ * @author GursimarSingh
+ */
+ public class Timeslot implements Comparable<Timeslot> {
+    // Private instance variables for hour and minute
+    private int hour;
+    private int minute;
 
-    private final int hour;
-    private final int minute;
+    //static-final constants for predefined timeslots (replace SLOT1, SLOT2, etc.)
+    public static final Timeslot SLOT1 = new Timeslot(9, 0);   //9:00am
+    public static final Timeslot SLOT2 = new Timeslot(9, 30);  //9:30am
+    public static final Timeslot SLOT3 = new Timeslot(10, 0);  //10:00am
+    public static final Timeslot SLOT4 = new Timeslot(10, 30); //10:30am
+    public static final Timeslot SLOT5 = new Timeslot(11, 0);  //11:00am
+    public static final Timeslot SLOT6 = new Timeslot(11, 30); //11:30am
 
-    Timeslot(int hour, int minute) {
+    /**
+     * Constructor to initialize the hour and minute of the timeslot.
+     *
+     * @param hour The hour of the timeslot.
+     * @param minute The minute of the timeslot.
+     */
+    public Timeslot(int hour, int minute) {
         this.hour = hour;
         this.minute = minute;
     }
 
+    @Override
     public String toString(){
-        int displayHour = hour % 12;
-        if(displayHour == 0) {
-            displayHour = 12;
-        }
-        String displayMinute = "";
+        //defining time period (morning-AM/afternoon-PM) - if hour is < 12 --> AM, if hour > 12 --> PM
+        String pd = (hour < 12) ? "AM"  : "PM";
 
-        if(minute == 0){
-            displayMinute = "00";
-        }else{
-            displayMinute = String.valueOf(minute);
-        }
+        //converting hour from 24-hr format to 12-hr format
+        //for midnight or 12 in afternoon --> displays 12; for any other value --> coversion from 24-hr to 12-hr
+        int hrFormat = (hour == 0 || hour == 12) ? 12 : hour % 12;
 
-        if(hour <= 12){
-            return displayHour + ":" + displayMinute + " AM";
-        }else{
-            return displayHour + ":" + displayMinute + " PM";
-        }
-
+        //formatting final return string
+        return String.format("%d:%02d %s", hrFormat, minute, pd);
     }
 
-    public static void main(String[] args) {
+    /**
+     * Compares this Timeslot to another Timeslot based on time (hour and minute).
+     *
+     * @param otherTime The other Timeslot to compare.
+     * @return A negative integer, zero, or a positive integer as this Timeslot
+     *         is less than, equal to, or greater than the specified Timeslot.
+     */
+    @Override
+    public int compareTo(Timeslot otherTime){
+
+        if(this.hour != otherTime.hour){
+            return (this.hour - otherTime.hour);
+        }
+
+        return this.minute - otherTime.minute;
+    }
+
+    /**
+     * Checks if two Timeslots are equal by comparing their hour and minute values.
+     *
+     * @param obj The object to compare with this Timeslot.
+     * @return true if the timeslots are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj){
+        //if the two timeslots are equal - then return true
+        if(this == obj){
+            return true;
+        }
+
+        if(obj == null || (getClass() != obj.getClass())){
+            return false;
+        }
+        //casting obj to a Timeslot object
+        Timeslot correct_timeslot = (Timeslot) obj;
+
+        //compare the hour & minute values
+        return ((hour == correct_timeslot.hour) && (minute == correct_timeslot.minute));
+    }
+
+
+    /*public static void main(String[] args) {
         System.out.println("Available Time Slots:");
 
         // Iterate through each Timeslot and print its string representation
         for (Timeslot slot : Timeslot.values()) {
             System.out.println(slot.toString());
         }
-    }
+    }*/
 
 }
