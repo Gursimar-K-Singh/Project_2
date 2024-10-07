@@ -19,12 +19,20 @@ package model;
     private int minute;
 
     //static-final constants for predefined timeslots (replace SLOT1, SLOT2, etc.)
+    //morning slots
     public static final Timeslot SLOT1 = new Timeslot(9, 0);   //9:00am
     public static final Timeslot SLOT2 = new Timeslot(9, 30);  //9:30am
     public static final Timeslot SLOT3 = new Timeslot(10, 0);  //10:00am
     public static final Timeslot SLOT4 = new Timeslot(10, 30); //10:30am
     public static final Timeslot SLOT5 = new Timeslot(11, 0);  //11:00am
-    public static final Timeslot SLOT6 = new Timeslot(11, 30); //11:30am
+    public static final Timeslot SLOT6 = new Timeslot(11, 30);
+    //afternoon slots
+    public static final Timeslot SLOT7 = new Timeslot(2, 0);   //2:00pm
+    public static final Timeslot SLOT8 = new Timeslot(2, 30);  //2:30pm
+    public static final Timeslot SLOT9 = new Timeslot(3, 0);  //3:00pm
+    public static final Timeslot SLOT10 = new Timeslot(3, 30); //3:30pm
+    public static final Timeslot SLOT11 = new Timeslot(4, 0);  //4:00pm
+    public static final Timeslot SLOT12 = new Timeslot(4, 30);//4:30pm
 
     /**
      * Constructor to initialize the hour and minute of the timeslot.
