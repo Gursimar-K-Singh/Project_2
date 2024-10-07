@@ -121,6 +121,7 @@ package model;
             case 10: return SLOT10;
             case 11: return SLOT11;
             case 12: return SLOT12;
+
             default: throw new IllegalArgumentException("Invalid Timeslot index");
         }
     }
