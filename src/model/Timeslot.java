@@ -98,6 +98,32 @@ package model;
         return ((hour == correct_timeslot.hour) && (minute == correct_timeslot.minute));
     }
 
+    /**
+     * Returns a predefined Timeslot instance based on the index provided.
+     *
+     * @param index The index of the timeslot (1-6).
+     * @return The corresponding predefined Timeslot (SLOT1, SLOT2, etc.).
+     * @throws IllegalArgumentException If the index is invalid.
+     */
+    public static Timeslot getTimeSlot(int idx) {
+
+        switch (idx) {
+            case 1: return SLOT1;
+            case 2: return SLOT2;
+            case 3: return SLOT3;
+            case 4: return SLOT4;
+            case 5: return SLOT5;
+            case 6: return SLOT6;
+
+            case 7: return SLOT7;
+            case 8: return SLOT8;
+            case 9: return SLOT9;
+            case 10: return SLOT10;
+            case 11: return SLOT11;
+            case 12: return SLOT12;
+            default: throw new IllegalArgumentException("Invalid Timeslot index");
+        }
+    }
 
     /*public static void main(String[] args) {
         System.out.println("Available Time Slots:");
