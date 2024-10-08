@@ -1,9 +1,8 @@
 package model;
-//@author AparnaSrinivas @author GursimarSingh
 /**
  * The Timeslot class represents a specific time during the day, identified by
  * the hour and minute in 24-hour format. It provides methods for comparing timeslots
- * and converting the timeslot to a readable string format (e.g., "09:30 AM").
+ * and converting the timeslot to a readable string format (e.g., "9:30 AM").
  *
  * This class also provides several predefined static instances representing
  * common appointment times.
@@ -101,7 +100,7 @@ package model;
     /**
      * Returns a predefined Timeslot instance based on the index provided.
      *
-     * @param index The index of the timeslot (1-6).
+     * @param idx The index of the timeslot (1-6).
      * @return The corresponding predefined Timeslot (SLOT1, SLOT2, etc.).
      * @throws IllegalArgumentException If the index is invalid.
      */
