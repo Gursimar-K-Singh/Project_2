@@ -7,18 +7,29 @@ public enum Radiology {
 
     private final String serviceName;
 
-    // Constructor for the enum
+    /**
+     * Constructor for the enum.
+     *
+     * @param serviceName the name of the imaging service.
+     */
     Radiology(String serviceName) {
         this.serviceName = serviceName;
     }
 
-    // Getter for the service name
+    /**
+     * Retrieves the name of the imaging service.
+     *
+     * @return the name of the imaging service.
+     */
     public String getServiceName() {
         return serviceName;
     }
 
-    // Overriding toString to return the service name
-    @Override
+    /**
+     * Returns a string representation of the imaging service.
+     *
+     * @return the name of the imaging service.
+     */    @Override
     public String toString() {
         return serviceName;
     }
