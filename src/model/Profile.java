@@ -79,7 +79,6 @@ public class Profile implements Comparable<Profile> {
         }
 
 
-
         Profile other = (Profile) obj;
         return this.fname.equals(other.fname) && this.lname.equals(other.lname) && this.dob.equals(other.dob);
     }

@@ -10,10 +10,10 @@ package model;
  */
 
 public class Appointment implements Comparable<Appointment> {
-    private Date date;
-    private Timeslot timeslot;
-    private Profile patient;
-    private Provider provider;
+    protected Date date;
+    protected Timeslot timeslot;
+    protected Person patient;
+    protected Person provider;
 
     /**
      * Constructor to create an Appointment object.
@@ -24,7 +24,7 @@ public class Appointment implements Comparable<Appointment> {
      * @param provider The provider associated with the appointment.
      */
 
-    public Appointment(Date date, Timeslot timeslot, Profile patient, Provider provider) {
+    public Appointment(Date date, Timeslot timeslot, Person patient, Person provider) {
         this.date = date;
         this.timeslot = timeslot;
         this.patient = patient;
@@ -54,7 +54,7 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return The patient's profile.
      */
-    public Profile getProfile() {
+    public Person getProfile() {
         return patient;
     }
 
@@ -63,7 +63,7 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return The appointment's provider.
      */
-    public Provider getProvider(){
+    public Person getProvider(){
         return provider;
     }
 
