@@ -46,20 +46,24 @@ public class Date implements Comparable<Date> {
      * @return true if the date is valid, false otherwise.
      */
     public boolean isValid() {
-
-        if(year < 1900){
+        if (year < 1900) {
             return false;
         }
 
-
-        if (month < Calendar.JANUARY|| month > Calendar.DECEMBER) {
+        if (month < Calendar.JANUARY || month > Calendar.DECEMBER) {
             return false;
         }
 
-        int maxDaysInMonth = getDaysInMonth(year, month);
-
-        return day >= 1 && day <= maxDaysInMonth;
-
+        // Create a calendar instance and set the year, month, and day
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false); // Ensures invalid dates throw an exception
+        try {
+            cal.set(year, month, day);
+            cal.getTime(); // Will throw an exception if the date is invalid
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -253,12 +257,12 @@ public class Date implements Comparable<Date> {
         Date date5 = new Date(10, 31, 2024);//Valid calendar date
         Date date6 = new Date(12, 13, 2024);
 
-        System.out.println(date1.isValid());
-        System.out.println(date2.isValid());
-        System.out.println(date3.isValid());
-        System.out.println(date4.isValid());
+        //System.out.println(date1.isValid());
+        //System.out.println(date2.isValid());
+        //System.out.println(date3.isValid());
+        //System.out.println(date4.isValid());
         System.out.println(date5.isValid());
-        System.out.println(date6.isValid());
+        //System.out.println(date6.isValid());
 
     }
 }
