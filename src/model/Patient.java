@@ -13,7 +13,7 @@ package model;
  * @author AparnaSrinivas
  * @author GursimarSingh
  */
-public class Patient extends Person{
+public class Patient extends Person {
     private Visit visits;
 
     /**
@@ -58,7 +58,7 @@ public class Patient extends Person{
     /**
      * Adds a new visit to the patient's visit list.
      * If the list is empty, the visit is set as the head.
-     * Otherwise, the new visit is added to the end of the list.
+     * Othe  rwise, the new visit is added to the end of the list.
      *
      * @param visit The visit to add to the patient's visit list.
      */
@@ -101,18 +101,6 @@ public class Patient extends Person{
     @Override
     public String toString() {
         return profile.toString();//profile class's toString()
-    }
-
-    /**
-     * Compares this patient with another patient based on their profiles.
-     * Delegates the comparison to the Profile class's compareTo method.
-     * @param other The other patient to compare with.
-     * @return A negative integer, zero, or a positive integer as this patient
-     * is less than, equal to, or greater than the specified patient.
-     */
-    @Override
-    public int compareTo(Patient other) {
-        return this.getProfile().compareTo(other.getProfile());
     }
 
 }
