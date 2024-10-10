@@ -1,7 +1,7 @@
 package model;
 
-public class Person {
-    protected Profile profile; // Instance variable for profile
+public class Person implements Comparable<Person> {
+    protected Profile profile;
 
     /**
      * Constructor to create a Person object.
@@ -38,6 +38,18 @@ public class Person {
 
         Person other = (Person) obj;
         return this.profile.equals(other.profile); // Compare based on profile
+    }
+
+    /**
+     * Compare this Person to another Person based on their profile.
+     *
+     * @param otherPerson The other Person to compare to
+     * @return A negative integer, zero, or a positive integer as this Person's profile is less than,
+     * equal to, or greater than the other Person's profile.
+     */
+    @Override
+    public int compareTo(Person otherPerson) {
+        return this.profile.compareTo(otherPerson.profile);
     }
 
 

@@ -13,8 +13,7 @@ package model;
  * @author AparnaSrinivas
  * @author GursimarSingh
  */
-public class Patient implements Comparable<Patient> {
-    private Profile profile;
+public class Patient extends Person implements Comparable<Patient>{
     private Visit visits;
 
     /**
@@ -24,7 +23,7 @@ public class Patient implements Comparable<Patient> {
      * @param profile The profile of the patient.
      */
     public Patient(Profile profile) {
-        this.profile = profile;
+        super(profile);
         this.visits = null;//empty list
     }
 
@@ -112,7 +111,7 @@ public class Patient implements Comparable<Patient> {
      */
     @Override
     public int compareTo(Patient other) {
-        return this.profile.compareTo(other.profile);//profile class's compareTo()
+        return this.getProfile().compareTo(other.getProfile());
     }
 
 }

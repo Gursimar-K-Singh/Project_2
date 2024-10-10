@@ -166,7 +166,7 @@ public class List {
      */
     public void printByPatient() {
         // creating sorting algorithm
-        profileSort();
+        //profileSort();
         for (int i = 0; i < size; i++) {
             System.out.println(appointments[i].toString());
         }
@@ -175,7 +175,7 @@ public class List {
 
     public void printByLocation() {
         // create sorting algorithm
-        CountySort();
+        //CountySort();
         for (int i = 0; i < size; i++) {
             System.out.println(appointments[i].toString());
         }
@@ -187,89 +187,13 @@ public class List {
      */
     public void printByAppointment() {
         // create sorting algorithm
-        AptDateSort();
+        //AptDateSort();
         for (int i = 0; i < size; i++) {
             System.out.println(appointments[i].toString());
         }
 
     }
 
-    /**
-     * Sorts the appointments by patient profile (last name, then first name).
-     */
-    private void profileSort() {
-        int new_len = size - 1;
-        for (int i = 0; i < new_len; i++) {
-            for (int j = 0; j < new_len - i; j++) {
-                int lastNameComparison = appointments[j].getProfile().getLname().compareTo(appointments[j + 1].getProfile().getLname());
 
-                // If first names are the same, compare last names
-                if (lastNameComparison == 0) {
-                    // Compare last names
-                    int firstNameComparison = appointments[j].getProfile().getFname().compareTo(appointments[j + 1].getProfile().getFname());
-                    if (firstNameComparison > 0) {
-                        // Swap if the last name of the first appointment is greater
-                        Appointment current = appointments[j];
-                        appointments[j] = appointments[j + 1];
-                        appointments[j + 1] = current;
-                    }
-                } else if (lastNameComparison > 0) {
-                    // Swap if the first name of the first appointment is greater
-                    Appointment current = appointments[j];
-                    appointments[j] = appointments[j + 1];
-                    appointments[j + 1] = current;
-                }
-            }
-        }
-    }
-
-    /**
-     * Sorts the appointments by appointment date, timeslot, and provider.
-     */
-    private void AptDateSort() {
-        for (int i = 0; i < size - 1; i++) {
-            for (int j = 0; j < size - 1 - i; j++) {
-                // Compare dates
-                int dateComparison = appointments[j].getDate().compareTo(appointments[j + 1].getDate());
-                // Compare timeslots if dates are equal
-                int timeslotComparison = appointments[j].getTimeslot().compareTo(appointments[j + 1].getTimeslot());
-                // Compare provider's last name if both dates and timeslots are equal
-                int providerComparison = appointments[j].getProvider().getName().compareTo(appointments[j + 1].getProvider().getName());
-
-                if (dateComparison > 0 ||
-                        (dateComparison == 0 && timeslotComparison > 0) ||
-                        (dateComparison == 0 && timeslotComparison == 0 && providerComparison > 0)) {
-                    // Swap appointments
-                    Appointment temp = appointments[j];
-                    appointments[j] = appointments[j + 1];
-                    appointments[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-    /**
-     * Sorts the appointments by provider's location (county).
-     */
-    private void CountySort() {
-        int n = size; // size refers to the number of appointments in the list
-        for (int i = 0; i < size - 1; i++) {
-            for (int j = 0; j < size - 1 - i; j++) {
-                int countyComparison = appointments[j].getProvider().getLocation().getCounty().compareTo(appointments[j + 1].getProvider().getLocation().getCounty());
-                int dateComparison = appointments[j].getDate().compareTo(appointments[j + 1].getDate());
-                int timeslotComparison = appointments[j].getTimeslot().compareTo(appointments[j + 1].getTimeslot());
-
-                if (countyComparison > 0 ||
-                        (countyComparison == 0 && dateComparison > 0) ||
-                        (countyComparison == 0 && dateComparison == 0 && timeslotComparison > 0)) {
-
-                    // Swap appointments
-                    Appointment temp = appointments[j];
-                    appointments[j] = appointments[j + 1];
-                    appointments[j + 1] = temp;
-                }
-            }
-        }
-    }
 
 }
