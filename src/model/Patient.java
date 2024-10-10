@@ -103,5 +103,10 @@ public class Patient extends Person {
         return profile.toString();//profile class's toString()
     }
 
+
+    public int compareTo(Person other) {
+        return super.compareTo(other);
+    }
+
 }
 
