@@ -58,7 +58,7 @@ public class Patient extends Person {
     /**
      * Adds a new visit to the patient's visit list.
      * If the list is empty, the visit is set as the head.
-     * Othe  rwise, the new visit is added to the end of the list.
+     * Otherwise, the new visit is added to the end of the list.
      *
      * @param visit The visit to add to the patient's visit list.
      */
