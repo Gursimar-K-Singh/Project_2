@@ -51,8 +51,8 @@ public class Patient extends Person {
             Patient patient = (Patient) obj;
             return profile.equals(patient.profile);
         }
-        //Patient patient = (Patient) obj;
         return false;
+
     }
 
     /**
@@ -102,7 +102,6 @@ public class Patient extends Person {
     public String toString() {
         return profile.toString();//profile class's toString()
     }
-
 
     public int compareTo(Person other) {
         return super.compareTo(other);
