@@ -13,25 +13,19 @@ package model;
  * @author GursimarSingh
  */
  public class Timeslot implements Comparable<Timeslot> {
-    // Private instance variables for hour and minute
-    private int hour;
-    private int minute;
 
-    //static-final constants for predefined timeslots (replace SLOT1, SLOT2, etc.)
-    //morning slots
-    public static final Timeslot SLOT1 = new Timeslot(9, 0);   //9:00am
-    public static final Timeslot SLOT2 = new Timeslot(9, 30);  //9:30am
-    public static final Timeslot SLOT3 = new Timeslot(10, 0);  //10:00am
-    public static final Timeslot SLOT4 = new Timeslot(10, 30); //10:30am
-    public static final Timeslot SLOT5 = new Timeslot(11, 0);  //11:00am
-    public static final Timeslot SLOT6 = new Timeslot(11, 30);
-    //afternoon slots
-    public static final Timeslot SLOT7 = new Timeslot(2, 0);   //2:00pm
-    public static final Timeslot SLOT8 = new Timeslot(2, 30);  //2:30pm
-    public static final Timeslot SLOT9 = new Timeslot(3, 0);  //3:00pm
-    public static final Timeslot SLOT10 = new Timeslot(3, 30); //3:30pm
-    public static final Timeslot SLOT11 = new Timeslot(4, 0);  //4:00pm
-    public static final Timeslot SLOT12 = new Timeslot(4, 30);//4:30pm
+    // Constants for the start times and slot durations
+    private static final int MORNING_START_HOUR = 9;
+    private static final int AFTERNOON_START_HOUR = 14; // 2:00 PM in 24-hour format
+    private static final int SLOT_DURATION_MINUTES = 30;
+    private static final int SLOTS_PER_SESSION = 6; // Number of slots per session (morning or afternoon)
+
+    // Instance variables for hour and minute
+    private final int hour;
+    private final int minute;
+
+    // Static array to store all time slots
+    public static final Timeslot[] TIME_SLOTS = createTimeslots();
 
     /**
      * Constructor to initialize the hour and minute of the timeslot.
@@ -43,6 +37,42 @@ package model;
         this.hour = hour;
         this.minute = minute;
     }
+
+    /**
+     * Generates 12 timeslots: 6 in the morning and 6 in the afternoon, each spaced 30 minutes apart.
+     *
+     * @return an array containing Timeslot objects
+     */
+    private static Timeslot[] createTimeslots() {
+        Timeslot[] slots = new Timeslot[SLOTS_PER_SESSION * 2]; // Total of 12 slots (6 morning + 6 afternoon)
+
+        // Create morning slots (9:00 AM to 11:30 AM)
+        int hour = MORNING_START_HOUR;
+        int minute = 0;
+        for (int i = 0; i < SLOTS_PER_SESSION; i++) {
+            slots[i] = new Timeslot(hour, minute);
+            minute += SLOT_DURATION_MINUTES;
+            if (minute == 60) {
+                minute = 0;
+                hour++;
+            }
+        }
+
+        // Create afternoon slots (2:00 PM to 4:30 PM)
+        hour = AFTERNOON_START_HOUR;
+        minute = 0;
+        for (int i = SLOTS_PER_SESSION; i < SLOTS_PER_SESSION * 2; i++) {
+            slots[i] = new Timeslot(hour, minute);
+            minute += SLOT_DURATION_MINUTES;
+            if (minute == 60) {
+                minute = 0;
+                hour++;
+            }
+        }
+
+        return slots;
+    }
+
 
     @Override
     public String toString(){
@@ -98,40 +128,58 @@ package model;
     }
 
     /**
-     * Returns a predefined Timeslot instance based on the index provided.
+     * Retrieves the numeric representation of this timeslot.
+     * The first morning slot (9:00 AM) corresponds to slot 1, while the last afternoon slot (4:30 PM) corresponds to slot 12.
      *
-     * @param idx The index of the timeslot (1-6).
-     * @return The corresponding predefined Timeslot (SLOT1, SLOT2, etc.).
-     * @throws IllegalArgumentException If the index is invalid.
+     * @return the numeric value of the timeslot (ranging from 1 to 12)
      */
-    public static Timeslot getTimeSlot(int idx) {
-
-        switch (idx) {
-            case 1: return SLOT1;
-            case 2: return SLOT2;
-            case 3: return SLOT3;
-            case 4: return SLOT4;
-            case 5: return SLOT5;
-            case 6: return SLOT6;
-
-            case 7: return SLOT7;
-            case 8: return SLOT8;
-            case 9: return SLOT9;
-            case 10: return SLOT10;
-            case 11: return SLOT11;
-            case 12: return SLOT12;
-
-            default: throw new IllegalArgumentException("Invalid Timeslot index");
+    public int getNumericSlot() {
+        for (int i = 0; i < TIME_SLOTS.length; i++) {
+            if (this.equals(TIME_SLOTS[i])) {
+                return i + 1;
+            }
         }
+        return -1;  // Invalid slot
     }
 
-    /*public static void main(String[] args) {
-        System.out.println("Available Time Slots:");
-
-        // Iterate through each Timeslot and print its string representation
-        for (Timeslot slot : Timeslot.values()) {
-            System.out.println(slot.toString());
+    //delete
+    public static void main(String[] args) {
+        // Print all timeslots
+        System.out.println("All available timeslots:");
+        for (Timeslot slot : Timeslot.TIME_SLOTS) {
+            System.out.println(slot);
         }
-    }*/
+
+        // Create a few Timeslot instances
+        Timeslot morningSlot1 = new Timeslot(9, 0);   // 9:00 AM
+        Timeslot morningSlot2 = new Timeslot(9, 30);   // 9:30 AM
+        Timeslot afternoonSlot1 = new Timeslot(14, 0); // 2:00 PM
+        Timeslot afternoonSlot2 = new Timeslot(14, 30); // 2:30 PM
+        Timeslot afternoonSlot3 = new Timeslot(14, 30); // 2:30 PM (for equality test)
+
+        // Print the timeslot string representations
+        System.out.println("\nIndividual Timeslots:");
+        System.out.println("Timeslot 1: " + morningSlot1);
+        System.out.println("Timeslot 2: " + morningSlot2);
+        System.out.println("Timeslot 3: " + afternoonSlot1);
+        System.out.println("Timeslot 4: " + afternoonSlot2);
+
+        // Compare the timeslots
+        System.out.println("\nComparing Timeslots:");
+        System.out.println("Comparing Timeslot 1 and Timeslot 2: " + morningSlot1.compareTo(morningSlot2));
+        System.out.println("Comparing Timeslot 3 and Timeslot 4: " + afternoonSlot1.compareTo(afternoonSlot2));
+        System.out.println("Comparing Timeslot 2 and Timeslot 1: " + morningSlot2.compareTo(morningSlot1));
+
+        // Check equality of timeslots
+        System.out.println("\nEquality Checks:");
+        System.out.println("Timeslot 2 equals Timeslot 1: " + morningSlot2.equals(morningSlot1));
+        System.out.println("Timeslot 2 equals Timeslot 3: " + morningSlot2.equals(afternoonSlot1));
+        System.out.println("Timeslot 2 equals Timeslot 4: " + afternoonSlot2.equals(afternoonSlot3));
+
+        // Get numeric slots
+        System.out.println("\nNumeric Slot Values:");
+        System.out.println("Numeric value of Timeslot 1 (9:00 AM): " + morningSlot1.getNumericSlot());
+        System.out.println("Numeric value of Timeslot 4 (2:30 PM): " + afternoonSlot2.getNumericSlot());
+    }
 
 }
