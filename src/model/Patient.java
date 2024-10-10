@@ -13,7 +13,7 @@ package model;
  * @author AparnaSrinivas
  * @author GursimarSingh
  */
-public class Patient extends Person implements Comparable<Patient>{
+public class Patient extends Person{
     private Visit visits;
 
     /**
@@ -81,6 +81,8 @@ public class Patient extends Person implements Comparable<Patient>{
      *
      * @return The total charge for all visits.
      */
+
+    /**
     public int charge() {
         int total = 0;
         Visit current = visits;//first visit - traversing start point
@@ -90,10 +92,10 @@ public class Patient extends Person implements Comparable<Patient>{
         }
         return total;
     }
+     */
 
     /**
      * Returns a string representation of the patient, using the profile's toString method.
-     *
      * @return A string representing the patient's profile.
      */
     @Override
@@ -104,10 +106,9 @@ public class Patient extends Person implements Comparable<Patient>{
     /**
      * Compares this patient with another patient based on their profiles.
      * Delegates the comparison to the Profile class's compareTo method.
-     *
      * @param other The other patient to compare with.
      * @return A negative integer, zero, or a positive integer as this patient
-     *         is less than, equal to, or greater than the specified patient.
+     * is less than, equal to, or greater than the specified patient.
      */
     @Override
     public int compareTo(Patient other) {
