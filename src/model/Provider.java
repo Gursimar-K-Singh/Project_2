@@ -13,28 +13,19 @@ package model;
  * @author AparnaSrinivas
  * @author GursimarSingh
  */
-public enum Provider {
-    PATEL(Location.BRIDGEWATER, Specialty.FAMILY),
-    LIM(Location.BRIDGEWATER, Specialty.PEDIATRICIAN),
-    ZIMNES(Location.CLARK, Specialty.FAMILY),
-    HARPER(Location.CLARK, Specialty.FAMILY),
-    KAUR(Location.PRINCETON, Specialty.ALLERGIST),
-    TAYLOR(Location.PISCATAWAY, Specialty.PEDIATRICIAN),
-    RAMESH(Location.MORRISTOWN, Specialty.ALLERGIST),
-    CERAVOLO(Location.EDISON, Specialty.PEDIATRICIAN);
+public abstract class Provider extends Person {
 
     private final Location location;
-    private final Specialty specialty;
 
     /**
-     * Constructs a Provider enum constant with the specified location and specialty.
+     * Constructs a Provider object with the specified location.
      *
+     * @param profile The profile of the provider (inherited from Person)
      * @param location The location of the provider.
-     * @param specialty The specialty of the provider.
      */
-    Provider(Location location, Specialty specialty) {
+    public Provider(Profile profile, Location location) {
+        super(profile); // Call the constructor of the Person class
         this.location = location;
-        this.specialty = specialty;
     }
 
     /**
@@ -43,9 +34,10 @@ public enum Provider {
      *
      * @return The name of the provider.
      */
-    public String getName(){
-        return name();
+    public String getName() {
+        return getProfile().getFname() + " " + getProfile().getLname(); // Assuming the profile contains first and last name
     }
+
 
     /**
      * Returns the location of the provider.
@@ -57,40 +49,23 @@ public enum Provider {
     }
 
     /**
-     * Returns a string representation of the provider in the format:
-     * "[ProviderName, Location, Specialty]"
+     * Abstract method to get the provider's charging rate per visit.
      *
-     * @return A string representing the provider, including the name, location, and specialty.
+     * @return The charging rate for seeing patients.
+     */
+    public abstract int rate(); // Subclasses must implement this method
+
+     /**
+     * Returns a string representation of the provider.
+     *
+     * @return A string representing the provider, including the name and location.
      */
     @Override
     public String toString() {
-        return "[" + this.name() + "," + location.toString() +"," + specialty + "]";
+        return "[" + getName() + ", " + location + "]";
     }
 
-    /**
-     * Returns the specialty of the provider.
-     *
-     * @return The specialty of the provider.
-     */
-    public Specialty getSpecialty(){
-        return specialty;
-    }
 
-    /**
-     * Main method to test the Provider enum.
-     * This method prints all providers along with their location and specialty.
-     *
-     * @param args The command-line arguments (not used).
-     */
-    public static void main(String[] args) {
-
-
-        System.out.println("\nProviders:");
-        // Test the Provider enum
-        for (Provider provider : Provider.values()) {
-            System.out.println(provider); // This will invoke the toString method of Provider
-        }
-    }
 
 
 }
