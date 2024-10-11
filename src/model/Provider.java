@@ -4,10 +4,8 @@ package model;
  * The Provider enum represents healthcare providers, each associated with a specific location and specialty.
  * This enum allows retrieval of a provider's name, location, and specialty. It overrides the `toString()` method
  * to return a formatted string representing the provider, location, and specialty.
- *
  * Each enum constant represents a healthcare provider, such as PATEL, LIM, ZIMNES, HARPER, and so on,
  * with a specific location and specialty.
- *
  * Locations are represented by the Location enum, and specialties are represented by the Specialty enum.
  *
  * @author AparnaSrinivas

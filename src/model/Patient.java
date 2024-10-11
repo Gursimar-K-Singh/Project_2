@@ -5,7 +5,6 @@ package model;
  * It contains the patient's profile and a linked list of visits.
  * The class provides methods for adding visits, calculating total charges,
  * and comparing patients based on their profiles.
- *
  * This class also implements the Comparable interface, allowing comparison between patients
  * based on their profiles. The total charge for a patient is calculated based on the
  * specialty of the providers in their visits.
