@@ -9,7 +9,7 @@ package model;
  * and overrides the {@code toString()} method to return a formatted string representing the provider.
  *
  * Example subclasses of Provider could include Doctor and Technician, each with their own
- * specific attributes and behaviors.
+ * specific attributes and behaviors. :)
  *
  * @author AparnaSrinivas
  * @author GursimarSingh
