@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.Iterator;
 
 /**
  * The List class represents a dynamic collection of elements of any type.
@@ -141,6 +142,37 @@ public class List<E> implements Iterable<E>{
      */
     public int indexOf(E e) {
         return find(e);
+    }
+
+    /**
+     * A private inner class that implements the Iterator interface for the List class.
+     */
+    private class ListIterator implements Iterator<E> {
+        private int currentIndex = 0;
+
+        /**
+         * Returns true if there are more elements to iterate over.
+         *
+         * @return true if there are more elements, false otherwise.
+         */
+        @Override
+        public boolean hasNext() {
+            return currentIndex < size;
+        }
+
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return The next element in the list, or null if there are no more elements.
+         */
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                return null; // No more elements, so return null
+            }
+            return objects[currentIndex++];
+        }
     }
 
 
