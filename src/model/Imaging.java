@@ -2,7 +2,7 @@ package model;
 
 public class Imaging extends Appointment {
 
-    private final Radiology room; // The imaging room for the appointment (e.g., X-ray, ultrasound, CAT scan)
+    private Radiology room; // The imaging room for the appointment (e.g., X-ray, ultrasound, CAT scan)
 
     /**
      * Constructs an Imaging appointment with the specified details.
