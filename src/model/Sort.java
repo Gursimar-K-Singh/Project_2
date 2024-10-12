@@ -1,4 +1,7 @@
 package model;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Sort {
 
@@ -80,10 +83,43 @@ public class Sort {
         return comparison;
     }
 
+    public static void provider(List<Provider> list) {
+        int n = list.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                Provider current = list.get(j);
+                Provider next = list.get(j + 1);
 
+                // Get last names and first names
+                String currentLastName = current.getProfile().getLname();
+                String nextLastName = next.getProfile().getLname();
+                String currentFirstName = current.getProfile().getFname();
+                String nextFirstName = next.getProfile().getFname();
 
-    public static void main(String[] args) {
+                // Compare last names
+                if (currentLastName.compareTo(nextLastName) > 0) {
+                    // Swap if current's last name is greater than next's last name
+                    list.add(next); // Add next to the end of the list
+                    list.remove(current); // Remove current from its position
+                } else if (currentLastName.equals(nextLastName)) {
+                    // If last names are equal, compare first names
+                    if (currentFirstName.compareTo(nextFirstName) > 0) {
+                        // Swap if current's first name is greater than next's first name
+                        list.add(next);
+                        list.remove(current);
+                    }
+                }
+            }
+        }
 
-
+        // Display the sorted providers
+        for (int i = 0; i < list.size(); i++) {
+            Provider provider = list.get(i);
+            System.out.println(provider.getProfile().getFname() + " " + provider.getProfile().getLname());
+        }
     }
+
+    
+
+
 }
