@@ -84,9 +84,12 @@ public class Sort {
                 }
                 break;
             case 'P': // Sort by patient (patient profile comparison can be adjusted as needed)
-                comparison = current.getProfile().compareTo(smallest.getProfile());
-                if (comparison == 0) {
-                    comparison = current.compareTo(smallest);
+                comparison = current.getProfile().compareTo(smallest.getProfile()); // Compare by patient profile
+                if (comparison == 0) { // If profiles are the same
+                    comparison = current.getDate().compareTo(smallest.getDate()); // Compare by appointment date
+                    if (comparison == 0) { // If appointment dates are the same
+                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot()); // Compare by time
+                    }
                 }
                 break;
             case 'L': // Sort by county name, then date, then time
