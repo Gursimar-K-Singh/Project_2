@@ -21,6 +21,8 @@ public class Date implements Comparable<Date> {
     public static final int month_with_30_days = 30;
     public static final int feb_leap = 29;
     public static final int feb = 28;
+    public static final int year1900 = 1900;
+
 
     /**
      * Constructor method to create a Date object.
@@ -47,7 +49,7 @@ public class Date implements Comparable<Date> {
      */
     public boolean isValid() {
 
-        if(year < 1900){
+        if(year < year1900){
             return false;
         }
 
