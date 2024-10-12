@@ -118,8 +118,4 @@ public class Sort {
             System.out.println(provider.getProfile().getFname() + " " + provider.getProfile().getLname());
         }
     }
-
-    
-
-
 }
