@@ -6,7 +6,6 @@ import java.util.Calendar;
  * It provides various methods to validate the date, check for leap years, compare dates,
  * and determine if the date falls on a weekend, is in the past, or is within six months from today.
  * Implements the Comparable interface to compare two Date objects.
- *
  * Constants are defined for the leap year calculation and the number of days in specific months.
  *
  * @author AparnaSrinivas
