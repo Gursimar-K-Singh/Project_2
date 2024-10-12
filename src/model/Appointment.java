@@ -109,10 +109,10 @@ public class Appointment implements Comparable<Appointment> {
             return dateComparison;
         }
 
-        int timeslotComparsion = this.timeslot.compareTo(other.timeslot);
+        int timeslotCompare = this.timeslot.compareTo(other.timeslot);
 
-        if(timeslotComparsion != 0){
-            return timeslotComparsion;
+        if(timeslotCompare != 0){
+            return timeslotCompare;
         }
 
         return this.patient.compareTo(other.patient);

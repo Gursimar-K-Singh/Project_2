@@ -32,29 +32,93 @@ public class Sort {
         }
     }
 
+    public static void appointment(List<Appointment> list, char key) {
+        int n = list.size();
+        List<Appointment> sortedList = new List<>();
+
+        while (!list.isEmpty()) {
+            Appointment smallest = list.get(0);
+
+            for (int i = 1; i < list.size(); i++) {
+                Appointment current = list.get(i);
+                int comparison = compareAppointments(current, smallest, key);
+
+                if (comparison < 0) {
+                    smallest = current; // Update the smallest appointment
+                }
+            }
+
+            list.remove(smallest); // Remove the smallest appointment from the original list
+            sortedList.add(smallest); // Add it to the sorted list
+        }
+
+        // Transfer sorted elements back to the original list
+        while (!sortedList.isEmpty()) {
+            Appointment appointment = sortedList.get(0);
+            sortedList.remove(appointment);
+            list.add(appointment);
+        }
+    }
+
+    /**
+     * Compares two appointments based on the specified sorting key.
+     *
+     * @param current The current appointment to compare.
+     * @param smallest The smallest appointment found so far.
+     * @param key The sorting key.
+     * @return A negative integer, zero, or a positive integer as the current appointment
+     *         is less than, equal to, or greater than the smallest appointment.
+     */
+    private static int compareAppointments(Appointment current, Appointment smallest, char key) {
+        int comparison = 0;
+
+        switch (key) {
+            case 'A': // Sort by appointment date, then time, then provider's name
+                comparison = current.compareTo(smallest);
+                break;
+            case 'P': // Sort by patient (patient profile comparison can be adjusted as needed)
+                comparison = current.getProfile().compareTo(smallest.getProfile());
+                if (comparison == 0) {
+                    comparison = current.compareTo(smallest);
+                }
+                break;
+            case 'L': // Sort by county name, then date, then time
+                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
+                        ((Provider) smallest.getProvider()).getLocation().getCounty());
+                if (comparison == 0) {
+                    comparison = current.compareTo(smallest);
+                }
+                break;
+            case 'O': // Sort office appointments (PO command)
+                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
+                        ((Provider) smallest.getProvider()).getLocation().getCounty());
+                if (comparison == 0) {
+                    comparison = current.getDate().compareTo(smallest.getDate());
+                    if (comparison == 0) {
+                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
+                    }
+                }
+                break;
+            case 'I': // Sort imaging appointments (PI command)
+                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
+                        ((Provider) smallest.getProvider()).getLocation().getCounty());
+                if (comparison == 0) {
+                    comparison = current.getDate().compareTo(smallest.getDate());
+                    if (comparison == 0) {
+                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid Command");
+        }
+
+        return comparison;
+    }
+
+
+
     public static void main(String[] args) {
-        // Example with Integers
-        List<Integer> intList = new List<>();
-        intList.add(5);
-        intList.add(3);
-        intList.add(8);
-        intList.add(1);
-
-        Sort.sort(intList);
-        for (Integer i : intList) {
-            System.out.println(i); // Outputs: 1, 3, 5, 8
-        }
-
-        // Example with Strings
-        List<String> stringList = new List<>();
-        stringList.add("Bob");
-        stringList.add("Alice");
-        stringList.add("Charlie");
-
-        Sort.sort(stringList);
-        for (String s : stringList) {
-            System.out.println(s); // Outputs: Alice, Bob, Charlie
-        }
 
 
     }
