@@ -86,35 +86,28 @@ public class Sort {
             case 'P': // Sort by patient (patient profile comparison can be adjusted as needed)
                 comparison = current.getProfile().compareTo(smallest.getProfile()); // Compare by patient profile
                 if (comparison == 0) { // If profiles are the same
-                    comparison = current.getDate().compareTo(smallest.getDate()); // Compare by appointment date
-                    if (comparison == 0) { // If appointment dates are the same
-                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot()); // Compare by time
-                    }
+                    comparison = compareDateAndTime(current, smallest); // Use the new method
                 }
                 break;
             case 'L': // Sort by county name, then date, then time
-                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
-                        ((Provider) smallest.getProvider()).getLocation().getCounty());
-                if (comparison == 0) { // If counties are the same
-                    comparison = current.getDate().compareTo(smallest.getDate());
-                    if (comparison == 0) { // If appointment dates are the same
-                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
-                    }
-                }
-                break;
             case 'O': // Sort office appointments (PO command)
             case 'I': // Sort imaging appointments (PI command)
                 comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
                         ((Provider) smallest.getProvider()).getLocation().getCounty());
                 if (comparison == 0) {
-                    comparison = current.getDate().compareTo(smallest.getDate());
-                    if (comparison == 0) {
-                        comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
-                    }
+                    comparison = compareDateAndTime(current, smallest); // Use the new method
                 }
                 break;
         }
 
+        return comparison;
+    }
+
+    private static int compareDateAndTime(Appointment current, Appointment smallest) {
+        int comparison = current.getDate().compareTo(smallest.getDate());
+        if (comparison == 0) {
+            comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
+        }
         return comparison;
     }
 
