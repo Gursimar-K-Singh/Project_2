@@ -74,7 +74,14 @@ public class Sort {
 
         switch (key) {
             case 'A': // Sort by appointment date, then time, then provider's name
-                comparison = current.compareTo(smallest);
+                comparison = current.getDate().compareTo(smallest.getDate());
+                if (comparison == 0) { // If the dates are the same
+                    comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
+                    if (comparison == 0) { // If the timeslots are the same
+                        comparison = current.getProvider().getProfile().getLname().compareTo(
+                                smallest.getProvider().getProfile().getLname());
+                    }
+                }
                 break;
             case 'P': // Sort by patient (patient profile comparison can be adjusted as needed)
                 comparison = current.getProfile().compareTo(smallest.getProfile());
@@ -83,22 +90,15 @@ public class Sort {
                 }
                 break;
             case 'L': // Sort by county name, then date, then time
-                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
-                        ((Provider) smallest.getProvider()).getLocation().getCounty());
-                if (comparison == 0) {
-                    comparison = current.compareTo(smallest);
-                }
-                break;
-            case 'O': // Sort office appointments (PO command)
-                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
-                        ((Provider) smallest.getProvider()).getLocation().getCounty());
-                if (comparison == 0) {
+                comparison = current.getProfile().compareTo(smallest.getProfile());
+                if (comparison == 0) { // If profiles are the same
                     comparison = current.getDate().compareTo(smallest.getDate());
-                    if (comparison == 0) {
+                    if (comparison == 0) { // If appointment dates are the same
                         comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
                     }
                 }
                 break;
+            case 'O': // Sort office appointments (PO command)
             case 'I': // Sort imaging appointments (PI command)
                 comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
                         ((Provider) smallest.getProvider()).getLocation().getCounty());
@@ -109,8 +109,6 @@ public class Sort {
                     }
                 }
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid Command");
         }
 
         return comparison;
