@@ -90,8 +90,9 @@ public class Sort {
                 }
                 break;
             case 'L': // Sort by county name, then date, then time
-                comparison = current.getProfile().compareTo(smallest.getProfile());
-                if (comparison == 0) { // If profiles are the same
+                comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
+                        ((Provider) smallest.getProvider()).getLocation().getCounty());
+                if (comparison == 0) { // If counties are the same
                     comparison = current.getDate().compareTo(smallest.getDate());
                     if (comparison == 0) { // If appointment dates are the same
                         comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
