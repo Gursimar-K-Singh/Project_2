@@ -3,7 +3,8 @@ package model;
 /**
  The Provider class represents a healthcare provider in the clinic system.
  * It extends the Person class, inheriting the provider's personal information, and associates
- * each provider with a specific location where they practice.
+ * each provider with a specific location where they practice. It is an aobstract class as it
+ * contains the abstract method rate().
  *
  *The class provides methods to retrieve the provider's name, location, and other details,
  * and overrides the {@code toString()} method to return a formatted string representing the provider.
