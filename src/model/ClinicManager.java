@@ -155,7 +155,7 @@ public class ClinicManager {
         Doctor NPInum = parseNPI(docNPInum);
         //write getProvider command
 
-        //below code line MUST BE CHECKED!!!!!
+        //below code line MUST BE CHECKED!!!!! - esp 'provider' parameter
         Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
         if (appointments == null) {
         } else if (!appointments.isAvailable(appointment)) {
@@ -256,6 +256,42 @@ public class ClinicManager {
 
     private void cancelAppointment(String[] tokens) {
         // Implementation for canceling an appointment
+        if (tokens.length != 7) {
+            System.out.println("Invalid command.");
+            return;
+        }
+
+        // Extract values from input tokens
+        String dateStr = tokens[1].trim();
+        String timeslotStr = tokens[2].trim();
+        String firstName = tokens[3].trim();
+        String lastName = tokens[4].trim();
+        String dobStr = tokens[5].trim();
+        String providerLastName = tokens[6].toUpperCase().trim();
+
+        // Convert strings to necessary objects (date, timeslot, profile)
+        Date appDate = parseDate(dateStr);
+        Date dob = parseDate(dobStr);
+        Profile patient = new Profile(firstName,lastName,dob);
+        Timeslot timeslot = parseTimeslot(timeslotStr);;
+        Provider provider = parseProvider(providerLastName);
+
+        Appointment appointment = new Appointment(appDate,timeslot,patient,provider);
+
+        // Create the appointment object to search for
+
+        // Check if the appointmentList exists and has appointments
+        if (appointmentList == null) {
+            System.out.println("No appointments exist to cancel.");
+            return;
+        }
+
+        if (appointmentList.contains(appointment)) {
+            System.out.println(appointment + " has been canceled.");
+            appointmentList.remove(appointment);
+        } else {
+            System.out.println(appointment + " does not exist.");
+        }
     }
 
     private void rescheduleAppointment(String[] tokens) {
