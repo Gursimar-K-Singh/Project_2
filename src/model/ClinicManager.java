@@ -7,17 +7,21 @@ import java.util.Calendar;
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers
     private List<Appointment> appointments; // List to hold all appointments
-    private List<Technician> technicians; // Circular list for technicians
+    private CircleList<Technician> techniciansList; // Circular list for technicians
 
     public ClinicManager() {
         providers = new List<>();
         appointments = new List<>();
-        technicians = new CircleList<>();
+        this.techniciansList = new CircleList<>();
         loadProviders();
-        sortProviders();
+        initializeTechniciansList();
+        Sort.provider(providers);
         displayProviders();
+        printTechniciansList();
         System.out.println("Clinic Manager is running.");
     }
+
+
 
     // Method to run the command processor
     public void run() {
@@ -46,7 +50,7 @@ public class ClinicManager {
                         providers.add(new Doctor(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
                         break;
                     case "T": //Technician
-                        technicians.add(new Technician(tokens[1], tokens[2], tokens[3], tokens[4]));
+                        techniciansList.add(new Technician(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
                         break;
                     }
                 }
@@ -145,6 +149,7 @@ public class ClinicManager {
         Profile patient = new Profile(firstName, lastName, dob);
         Timeslot timeslot = parseTimeslot(timeslotStr);
         Doctor NPInum = parseNPI(docNPInum);
+        //write getProvider command
 
         //below code line MUST BE CHECKED!!!!!
         Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
@@ -174,9 +179,21 @@ public class ClinicManager {
         return null; // If no doctor is found with the given NPI
     }
 
+
     private void scheduleImagingAppointment(String[] tokens) {
         // Implementation for scheduling an imaging appointment
+        if (tokens.length < 7) {
+            System.out.println("Error: Missing data tokens.");
+            return;
+        }
 
+        // Extract data from the tokens
+        String dateStr = tokens[1];
+        String timeslotStr = tokens[2];
+        String firstName = tokens[3];
+        String lastName = tokens[4];
+        String dobStr = tokens[5];
+        String imagingType = tokens[6].toLowerCase();//lower case handling
     }
 
     private void cancelAppointment(String[] tokens) {
