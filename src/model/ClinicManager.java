@@ -112,7 +112,7 @@ public class ClinicManager {
         String firstName = tokens[3].trim();
         String lastName = tokens[4].trim();
         String dobStr = tokens[5].trim();
-        String imagingType = tokens[6].trim();
+        String docNPInum = tokens[6].trim();
 
 
         if (!validateAppointmentDate(dateStr)) {
@@ -129,17 +129,22 @@ public class ClinicManager {
             return; // Stop if the DOB is invalid
         }
 
-        if (!checkImagingType(imagingType)) {
-            System.out.println(imagingType + " - Provider does not exist.");
-            return; // Stop if the provider does not exist
+        Doctor doc = findDoctor(docNPInum);
+        if(doctor == null){
+            System.out.println("Error: Doctor with NPI " + doctorNPI + " not found.");
+            return;
         }
+
+        /*if (!checkImagingType(imagingTypeStr)) {
+            System.out.println(imagingTypeStr + " - Provider does not exist.");
+            return; // Stop if the provider does not exist
+        }*/
 
         Date appDate = parseDate(dateStr);
         Date dob = parseDate(dobStr);
         Profile patient = new Profile(firstName, lastName, dob);
         Timeslot timeslot = parseTimeslot(timeslotStr);
-        ;
-        Provider provider = parseProvider(providerLastName);
+        Doctor NPInum = parseNPI(docNPInum);
 
         Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
 
@@ -174,6 +179,7 @@ public class ClinicManager {
 
     private void scheduleImagingAppointment(String[] tokens) {
         // Implementation for scheduling an imaging appointment
+
     }
 
     private void cancelAppointment(String[] tokens) {
