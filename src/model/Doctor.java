@@ -5,12 +5,12 @@ package model;
  * It extends the Provider class and encapsulates the rate per visit based on specialty,
  * along with a unique National Provider Identification (NPI) number.
  *
- * @author YourName
+ * @author AparnaSrinivas, GursimarSingh
  */
 
 public class Doctor extends Provider {
     private final Specialty specialty; // Encapsulates the rate per visit based on specialty
-    private final String npi;
+    private final String npi; //National Provider Identification unique to the doctor
 
 
     /**
@@ -22,7 +22,7 @@ public class Doctor extends Provider {
      * @param npi The National Provider Identification number.
      */
     public Doctor(Profile profile, Location location, Specialty specialty, String npi) {
-        super(profile, location); // Call the Provider constructor
+        super(profile, location); // Call the Provider constructor to obtain profile and location
         this.specialty = specialty; // Initialize specialty
         this.npi = npi; // Initialize NPI
     }

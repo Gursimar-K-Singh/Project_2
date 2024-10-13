@@ -4,11 +4,11 @@ package model;
  * The Technician class represents a specific type of healthcare provider.
  * It extends the Provider class and encapsulates the charging rate per visit.
  *
- * @author YourName
+ * @author GursimarSingh, AparnaSrinivas
  */
 public class Technician extends Provider {
 
-    private final int ratePerVisit; // Charging rate per visit for the technician
+    private int ratePerVisit; // Charging rate per visit for the technician
 
     /**
      * Constructs a Technician object with the specified details.
@@ -18,7 +18,7 @@ public class Technician extends Provider {
      * @param ratePerVisit The charging rate for each visit.
      */
     public Technician(Profile profile, Location location, int ratePerVisit) {
-        super(profile, location); // Call the Provider constructor
+        super(profile, location); // Call the Provider constructor to obtain profile and location
         this.ratePerVisit = ratePerVisit; // Initialize the charging rate
     }
 
