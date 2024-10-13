@@ -22,7 +22,6 @@ public class ClinicManager {
     }
 
 
-
     // Method to run the command processor
     public void run() {
         Scanner scanner = new Scanner(System.in);
@@ -45,13 +44,13 @@ public class ClinicManager {
             while (fileScanner.hasNextLine()) {
                 String[] tokens = fileScanner.nextLine().trim().split("\\s+");
                 if (tokens.length > 0) {
-                    switch(tokens[0]){
-                    case "D": //Doctor
-                        providers.add(new Doctor(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
-                        break;
-                    case "T": //Technician
-                        techniciansList.add(new Technician(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
-                        break;
+                    switch (tokens[0]) {
+                        case "D": //Doctor
+                            providers.add(new Doctor(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
+                            break;
+                        case "T": //Technician
+                            techniciansList.add(new Technician(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
+                            break;
                     }
                 }
             }
@@ -62,14 +61,14 @@ public class ClinicManager {
     }
 
     //Sorts providers by profile (default assumer Profile class implements Comparable)
-    private void sortProviders(){
+    private void sortProviders() {
         Sort.provider(providers);//Calling Sort class
     }
 
     //Displays sorted providers
-    private void displayProviders(){
+    private void displayProviders() {
         System.out.println("List of providers:");
-        for(Provider provider: providers){
+        for (Provider provider : providers) {
             System.out.println(provider);
         }
     }
@@ -111,6 +110,11 @@ public class ClinicManager {
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
         //Technician nextTechnician = technicians.getNext();
+        if (tokens.length < 7) {
+            System.out.println("Error: Missing data tokens.");
+            return;
+        }
+
         String dateStr = tokens[1].trim();
         String timeslotStr = tokens[2].trim();
         String firstName = tokens[3].trim();
@@ -134,7 +138,7 @@ public class ClinicManager {
         }
 
         Doctor doc = findDoctor(docNPInum);
-        if(doctor == null){
+        if (doctor == null) {
             System.out.println("Error: Doctor with NPI " + doctorNPI + " not found.");
             return;
         }
@@ -156,7 +160,8 @@ public class ClinicManager {
         if (appointments == null) {
         } else if (!appointments.isAvailable(appointment)) {
             System.out.println("The selected timeslot is not available for this provider.");
-            return;} // Stop if the timeslot is not available
+            return;
+        } // Stop if the timeslot is not available
         if (appointments == null) {
             appointments = new List(); // Initialize appointmentList if it's null
         }
@@ -194,7 +199,60 @@ public class ClinicManager {
         String lastName = tokens[4];
         String dobStr = tokens[5];
         String imagingType = tokens[6].toLowerCase();//lower case handling
+
+        if (!isValidDate(dateStr)) {
+            System.out.println("Error: Invalid date: " + dateStr);
+            return;
+        }
+
+        // Validate timeslot (must be between 1 and 12)
+        if (!isValidTimeslot(timeslotStr)) {
+            System.out.println("Error: Invalid timeslot: " + timeslotStr);
+            return;
+        }
+        int timeslot = Integer.parseInt(timeslotStr); // Convert timeslot to integer
+
+        // Validate date of birth
+        if (!isValidDate(dobStr)) {
+            System.out.println("Error: Invalid date of birth: " + dobStr);
+            return;
+        }
+
+        // Validate imaging service
+        Radiology roomType = getRadiologyType(imagingType);
+        if (roomType == null) {
+            System.out.println("Error: Invalid imaging service: " + imagingServiceStr);
+            return;
+        }
+
+        // Get the next available technician for the imaging service
+        Technician nextTechnician = techniciansList.getNext();
+        if (nextTechnician == null) {
+            System.out.println("Error: No available technicians.");
+            return;
+        }
+
+        // Check if the imaging room is available at the requested timeslot
+        if (!isRoomAvailable(roomType, timeslot, dateStr)) {
+            System.out.println("Error: Imaging room is not available at the requested timeslot.");
+            return;
+        }
+
+        Date appDate = parseDate(dateStr);
+        Date dob = parseDate(dobStr);
+        Profile patient = new Profile(firstName, lastName, dob);
+        Timeslot timeslotImg = parseTimeslot(timeslotStr);
+        Imaging ImagingService = parseImagingType(imagingType);
+
+        // Create a new Patient object
+        Patient patientImg = new Patient(patient);
+
+        // Schedule the imaging appointment
+        Imaging imagingAppointment = new Imaging(appDate, timeslotImg, patientImg, nextTechnician, roomType);
+        appointments.add(imagingAppointment);
+        System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + imagingServiceStr + ".");
     }
+
 
     private void cancelAppointment(String[] tokens) {
         // Implementation for canceling an appointment
@@ -215,4 +273,6 @@ public class ClinicManager {
     private void displayCreditAmounts() {
         // Implementation to display provider credit amounts
     }
+
 }
+
