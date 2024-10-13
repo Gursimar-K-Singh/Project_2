@@ -60,10 +60,44 @@ public class ClinicManager {
         }
     }
 
-    //Sorts providers by profile (default assumer Profile class implements Comparable)
-    private void sortProviders() {
-        Sort.provider(providers);//Calling Sort class
+    //double check method!!!
+    private Provider parseProvider(String inLine){
+        String[] tokens = inLine.split(",");
+        if(tokens.length < 5){
+            System.out.println("Invalid provider data: " + inLine);
+            return null;
+        }
+        String firstName = tokens[0].trim();
+        String lastName = tokens[1].trim();
+        String dobStr = tokens[2].trim();
+        String npi = tokens[3].trim();
+        String providerType = tokens[4].trim().toLowerCase();
+
+        Date dob = parseDate(dobStr);
+
+        if (dob == null) {
+            System.out.println("Invalid date for provider: " + inLine);
+            return null;
+        }
+        Profile profile = new Profile(firstName, lastName, dob);
+        if (providerType.equals("doctor")) {
+            // If this is a Doctor, additional tokens may include specialty information
+            String specialtyStr = tokens[5].trim();  // Example: "Cardiology"
+            Specialty specialty = Specialty.valueOf(specialtyStr.toUpperCase());  // Assuming enum for specialties
+            return new Doctor(profile, specialty, npi);  // Create and return Doctor object
+
+        } else if (providerType.equals("technician")) {
+            // If this is a Technician, additional tokens may include rate per visit
+            int ratePerVisit = Integer.parseInt(tokens[5].trim());  // Example: "150"
+            return new Technician(profile, ratePerVisit);  // Create and return Technician object
+
+        } else {
+            System.out.println("Unknown provider type: " + providerType);
+            return null;
+        }
+
     }
+
 
     //Displays sorted providers
     private void displayProviders() {
@@ -109,19 +143,16 @@ public class ClinicManager {
     // Placeholder methods for various actions
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
-        //Technician nextTechnician = technicians.getNext();
         if (tokens.length < 7) {
             System.out.println("Error: Missing data tokens.");
             return;
         }
-
         String dateStr = tokens[1].trim();
         String timeslotStr = tokens[2].trim();
         String firstName = tokens[3].trim();
         String lastName = tokens[4].trim();
         String dobStr = tokens[5].trim();
         String docNPInum = tokens[6].trim();
-
 
         if (!validateAppointmentDate(dateStr)) {
             // If the date is invalid, stop further processing
