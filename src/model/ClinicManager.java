@@ -105,7 +105,17 @@ public class ClinicManager {
     // Placeholder methods for various actions
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
-        Technician nextTechnician = technicians.CircleList().getNext();
+        Technician nextTechnician = technicians.getNext();
+    }
+
+    //helper method to find doctor by NPI#
+    private Doctor findDoctor(String npi) {
+        for (Provider provider : providers) {
+            if (provider instanceof Doctor && ((Doctor) provider).getNPI().equals(npi)) {
+                return (Doctor) provider;
+            }
+        }
+        return null; // If no doctor is found with the given NPI
     }
 
     private void scheduleImagingAppointment(String[] tokens) {
