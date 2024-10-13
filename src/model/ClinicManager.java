@@ -152,11 +152,12 @@ public class ClinicManager {
         Date dob = parseDate(dobStr);
         Profile patient = new Profile(firstName, lastName, dob);
         Timeslot timeslot = parseTimeslot(timeslotStr);
-        Doctor NPInum = parseNPI(docNPInum);
-        //write getProvider command
+        String NPInum = parseNPI(docNPInum);
+
+        Patient patientSchedule = new Patient(patient);
 
         //below code line MUST BE CHECKED!!!!! - esp 'provider' parameter
-        Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
+        Appointment appointment = new Appointment(appDate, timeslot, patientSchedule, findDoctor(NPInum));
         if (appointments == null) {
         } else if (!appointments.isAvailable(appointment)) {
             System.out.println("The selected timeslot is not available for this provider.");
@@ -176,12 +177,13 @@ public class ClinicManager {
 
     //helper method to find doctor by NPI#
     private Doctor findDoctor(String npi) {
-        for (Provider provider : providers) {
+        for (int i = 0; i < providers.getSize(); i++) {
+            Provider provider = providers.get(i);
             if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
-                return (Doctor) provider;
+                return (Doctor) provider; // Return the found Doctor
             }
         }
-        return null; // If no doctor is found with the given NPI
+        return null; // No doctor found with that NPI
     }
 
 
@@ -362,6 +364,11 @@ public class ClinicManager {
 
     private void displayCreditAmounts() {
         // Implementation to display provider credit amounts
+    }
+
+    //Main
+    public static void main(String[] args){
+        new ClinicManager().run();
     }
 
 }
