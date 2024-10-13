@@ -146,15 +146,12 @@ public class ClinicManager {
         Timeslot timeslot = parseTimeslot(timeslotStr);
         Doctor NPInum = parseNPI(docNPInum);
 
+        //below code line MUST BE CHECKED!!!!!
         Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
-
         if (appointments == null) {
-
         } else if (!appointments.isAvailable(appointment)) {
             System.out.println("The selected timeslot is not available for this provider.");
-            return; // Stop if the timeslot is not available
-        }
-
+            return;} // Stop if the timeslot is not available
         if (appointments == null) {
             appointments = new List(); // Initialize appointmentList if it's null
         }
