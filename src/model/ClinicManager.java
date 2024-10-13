@@ -276,7 +276,9 @@ public class ClinicManager {
         Timeslot timeslot = parseTimeslot(timeslotStr);;
         Provider provider = parseProvider(providerLastName);
 
-        Appointment appointment = new Appointment(appDate,timeslot,patient,provider);
+        Patient patientCancel = new Patient(patient);
+
+        Appointment appointment = new Appointment(appDate,timeslot,patientCancel,provider);
 
         // Create the appointment object to search for
 
@@ -296,6 +298,58 @@ public class ClinicManager {
 
     private void rescheduleAppointment(String[] tokens) {
         // Implementation for rescheduling an appointment
+        if (tokens.length != 7) {
+            System.out.println("Invalid command.");
+            return;
+        }
+
+        String dateStr = tokens[1].trim();
+        String oldTimeslotStr = tokens[2].trim();
+        String firstName = tokens[3].trim();
+        String lastName = tokens[4].trim();
+        String dobStr = tokens[5].trim();
+        String newTimeslotStr = tokens[6].trim();
+
+        // Convert strings to necessary objects (date, timeslot, profile)
+
+        if (!isValidTimeSlot(newTimeslotStr)) {
+            return;
+        }
+
+        if (appointmentList == null) {
+            System.out.println("No appointments exist to reschedule.");
+            return;
+        }
+
+        Date appDate = parseDate(dateStr);
+        Timeslot oldTimeslot = Timeslot.valueOf("SLOT" + oldTimeslotStr);
+        Timeslot newTimeslot = Timeslot.valueOf("SLOT" + newTimeslotStr);
+        Date dob = parseDate(dobStr);
+        Profile patient = new Profile(firstName, lastName, dob);
+        Appointment oldAppointment = new Appointment(appDate, oldTimeslot, patient, null);
+
+        if (!appointmentList.contains(oldAppointment)) {
+            System.out.println(appDate.toString() + " " + oldTimeslot.toString() + " " + firstName + " " + lastName + " " + dob.toString() + " does not exist.");
+            return;
+        }
+
+        Appointment existingAppointment = findExistingAppointment(oldAppointment);
+        if (existingAppointment == null) {
+            System.out.println(appDate.toString() + " " + oldTimeslot.toString() + " " + firstName + " " + lastName + " " + dob.toString() + " does not exist.");
+            return;
+        }
+        Provider provider = existingAppointment.getProvider(); // Assuming getProvider() exists
+        Appointment newAppointment = new Appointment(appDate, newTimeslot, patient, existingAppointment.getProvider());
+
+        if (!appointmentList.isAvailable(newAppointment)) {
+            System.out.println(provider + " is not available at " + newTimeslot +".");
+            return;
+        }
+
+        handleAppointmentAddition(newAppointment);
+        appointmentList.remove(oldAppointment);
+        appointmentList.add(newAppointment);
+        System.out.println("Rescheduled to "+ newAppointment.toString() );
     }
 
     private void displayOfficeAppointments() {
