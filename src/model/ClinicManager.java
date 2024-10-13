@@ -2,6 +2,7 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Calendar;
 
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers
@@ -105,13 +106,66 @@ public class ClinicManager {
     // Placeholder methods for various actions
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
-        Technician nextTechnician = technicians.getNext();
+        //Technician nextTechnician = technicians.getNext();
+        String dateStr = tokens[1].trim();
+        String timeslotStr = tokens[2].trim();
+        String firstName = tokens[3].trim();
+        String lastName = tokens[4].trim();
+        String dobStr = tokens[5].trim();
+        String imagingType = tokens[6].trim();
+
+
+        if (!validateAppointmentDate(dateStr)) {
+            // If the date is invalid, stop further processing
+            return;
+        }
+
+        if (!isValidTimeSlot(timeslotStr)) {
+            // If the timeslot is invalid, stop further processing
+            return;
+        }
+
+        if (!checkDOB(dobStr)) {
+            return; // Stop if the DOB is invalid
+        }
+
+        if (!checkImagingType(imagingType)) {
+            System.out.println(imagingType + " - Provider does not exist.");
+            return; // Stop if the provider does not exist
+        }
+
+        Date appDate = parseDate(dateStr);
+        Date dob = parseDate(dobStr);
+        Profile patient = new Profile(firstName, lastName, dob);
+        Timeslot timeslot = parseTimeslot(timeslotStr);
+        ;
+        Provider provider = parseProvider(providerLastName);
+
+        Appointment appointment = new Appointment(appDate, timeslot, patient, provider);
+
+        if (appointments == null) {
+
+        } else if (!appointments.isAvailable(appointment)) {
+            System.out.println("The selected timeslot is not available for this provider.");
+            return; // Stop if the timeslot is not available
+        }
+
+        if (appointments == null) {
+            appointments = new List(); // Initialize appointmentList if it's null
+        }
+
+        if (appointments.contains(appointment)) {
+            System.out.println("Appointment already exists.");
+        } else {
+            appointments.add(appointment);
+            System.out.println(appointment + "booked");
+        }
     }
 
     //helper method to find doctor by NPI#
     private Doctor findDoctor(String npi) {
         for (Provider provider : providers) {
-            if (provider instanceof Doctor && ((Doctor) provider).getNPI().equals(npi)) {
+            if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
                 return (Doctor) provider;
             }
         }
