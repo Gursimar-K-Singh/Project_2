@@ -1,4 +1,4 @@
-package model;
+package util;
 import java.util.Iterator;
 
 /**
@@ -116,7 +116,7 @@ public class List<E> implements Iterable<E>{
      */
     @Override
     public Iterator<E> iterator() {
-        return new ListIterator();
+        return new model.List.ListIterator();
     }
 
     /**

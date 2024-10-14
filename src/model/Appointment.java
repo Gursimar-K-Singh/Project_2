@@ -1,4 +1,6 @@
 package model;
+import util.Date;
+
 
 /**
  * The Appointment class represents an appointment at the clinic. It includes information
