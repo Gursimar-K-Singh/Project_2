@@ -322,9 +322,9 @@ public class ClinicManager {
             return;
         }
 
-        if (appointmentList.contains(appointment)) {
+        if (appointments.contains(appointment)) {
             System.out.println(appointment + " has been canceled.");
-            appointmentList.remove(appointment);
+            appointments.remove(appointment);
         } else {
             System.out.println(appointment + " does not exist.");
         }
@@ -350,7 +350,7 @@ public class ClinicManager {
             return;
         }
 
-        if (appointmentList == null) {
+        if (appointments == null) {
             System.out.println("No appointments exist to reschedule.");
             return;
         }
