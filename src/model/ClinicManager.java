@@ -430,7 +430,7 @@ public class ClinicManager {
         System.out.println("Rescheduled to "+ newAppointment.toString() );
     }
 
-    private Appointment findAppointmentforRescheduling(Date appointmentDate, Timeslot timeslot, Profile patientProfile) {
+    private Appointment findAppointmentforRescheduling(Date appDate, Timeslot timeslot, Profile patient) {
         if (appointments == null || appointments.isEmpty()) {
             return null;  // No appointments to search through
         }
@@ -438,9 +438,9 @@ public class ClinicManager {
         for (int i = 0; i < appointments.size(); i++) {
             Appointment appointment = appointments.get(i);
             // Compare the date, timeslot, and patient profile for a match
-            if (appointment.getDate().equals(appointmentDate) &&
+            if (appointment.getDate().equals(appDate) &&
                     appointment.getTimeslot().equals(timeslot) &&
-                    appointment.getPatient().getProfile().equals(patientProfile)) {
+                    appointment.getPatient().getProfile().equals(patient)) {
                 return appointment;  // Return the matching appointment
             }
         }
@@ -448,7 +448,56 @@ public class ClinicManager {
         return null;
     }
 
-    private Appointment findAppointmentToCancel(Date appointmentDate, Timeslot timeslot, Profile patientProfile) { /* ... */ }
+    private Appointment findCancellingAppointment(Date appDate, Timeslot timeslot, Profile patient) {
+        if (appointments == null || appointments.isEmpty()) {
+            System.out.println("No appointments to search for cancellation.");
+            return null;
+        }
+        // Iterate through the appointmentList to find a matching appointment
+        for (int i = 0; i < appointments.size(); i++) {
+            Appointment appointment = appointments.get(i);
+            // Checks if the appointment's date, timeslot, and patient profile match
+            if (appointment.getDate().equals(appDate) &&
+                    appointment.getTimeslot().equals(timeslot) &&
+                    appointment.getPatient().getProfile().equals(patient)) {
+                return appointment;  // Return the appointment if found
+            }
+        }
+        // If no match is found, return null
+        return null;
+    }
+
+    private Technician findTechnicianAvailable(Timeslot timeslot, Radiology room) {
+        if (techniciansList == null || techniciansList.isEmpty()) {
+            System.out.println("No technicians available.");
+            return null;
+        }
+        // Iterate over the circular list of technicians
+        for (int i = 0; i < techniciansList.size(); i++) {
+            Technician technician = techniciansList.get(i);
+            // Check if the technician is available at the given timeslot and room
+            if (technician.isAvailable(timeslot) && technician.hasRoom(room)) {
+                return technician;  // Return the first available technician
+            }
+        }
+        // If no available technician is found, return null
+        return null;
+    }
+
+    private boolean TechnicianAvailability(Technician technician, Timeslot timeslot, Radiology room) {
+        // Check if the technician is available during the specified timeslot
+        if (!technician.isAvailable(timeslot)) {
+            return false;  // Technician is not available at this timeslot
+        }
+        // Check if the technician is assigned to the given radiology room
+        if (!technician.hasRoom(room)) {
+            return false;  // Technician is not assigned to the specified room
+        }
+        // If both conditions are met, the technician is available
+        return true;
+    }
+
+
 
 
     private void displayOfficeAppointments() {
