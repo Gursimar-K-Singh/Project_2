@@ -214,7 +214,7 @@ public class ClinicManager {
         }
 
         Doctor doc = findDoctor(docNPInum);
-        if (doctor == null) {
+        if (doc == null) {
             System.out.println("Error: Doctor with NPI " + doctorNPI + " not found.");
             return;
         }
