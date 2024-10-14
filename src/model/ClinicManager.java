@@ -214,8 +214,8 @@ public class ClinicManager {
         }
 
         Doctor doc = findDoctor(docNPInum);
-        if (doctor == null) {
-            System.out.println("Error: Doctor with NPI " + doctorNPI + " not found.");
+        if (doc == null) {
+            System.out.println("Error: Doctor with NPI " + docNPInum + " not found.");
             return;
         }
 
@@ -299,7 +299,7 @@ public class ClinicManager {
         // Validate imaging service
         Radiology roomType = getRadiologyType(imagingType);
         if (roomType == null) {
-            System.out.println("Error: Invalid imaging service: " + imagingServiceStr);
+            System.out.println("Error: Invalid imaging service: " + imagingType);
             return;
         }
 
@@ -668,10 +668,6 @@ public class ClinicManager {
         }
         return true; // Valid timeslot
     }
-
-
-
-
 
 
 
