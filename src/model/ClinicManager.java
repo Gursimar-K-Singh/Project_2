@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Calendar;
+import util.List;
 
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers
@@ -14,10 +15,10 @@ public class ClinicManager {
         appointments = new List<>();
         this.techniciansList = new CircleList<>();
         loadProviders();
-        initializeTechniciansList();
+        //initializeTechniciansList();
         Sort.provider(providers);
         displayProviders();
-        printTechniciansList();
+        //printTechniciansList();
         System.out.println("Clinic Manager is running.");
     }
 
