@@ -1,4 +1,4 @@
-package model;
+package util;
 import java.util.Iterator;
 
 /**
@@ -116,7 +116,7 @@ public class List<E> implements Iterable<E>{
      */
     @Override
     public Iterator<E> iterator() {
-        return new ListIterator();
+        return new model.List.ListIterator();
     }
 
     /**
@@ -145,7 +145,7 @@ public class List<E> implements Iterable<E>{
     /**
      * A private inner class that implements the Iterator interface for the List class.
      */
-    public static class ListIterator implements Iterator<E> {
+    private class ListIterator implements Iterator<E> {
         private int currentIndex = 0;
 
         /**
