@@ -552,6 +552,128 @@ public class ClinicManager {
         }
     }
 
+    //need to fix this!!!
+    private static Timeslot parseTimeslot(String timeslotStr) {
+        switch (timeslotStr.trim()) {
+            case "1":
+                return Timeslot.SLOT1;
+            case "2":
+                return Timeslot.SLOT2;
+            case "3":
+                return Timeslot.SLOT3;
+            case "4":
+                return Timeslot.SLOT4;
+            case "5":
+                return Timeslot.SLOT5;
+            case "6":
+                return Timeslot.SLOT6;
+            default:
+                return null;
+        }
+    }
+
+    private boolean scheduleAppPossibility(Appointment newAppointment, Provider provider) {
+
+    }
+
+    private static Provider parseProvider(String providerStr) {
+        try {
+            return Provider.valueOf(providerStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static Date parseDate(String dateStr) {
+        String[] dateTokens = dateStr.split("/");
+        if (dateTokens.length != 3) {
+            return null;  // Invalid date format
+        }
+
+        int month = Integer.parseInt(dateTokens[0]);
+        int day = Integer.parseInt(dateTokens[1]);
+        int year = Integer.parseInt(dateTokens[2]);
+        return new Date(month, day, year);  // Return new Date object
+
+    }
+
+    private static boolean validateAppointmentDate(String dateStr) {
+        Date appointmentDate = parseDate(dateStr);
+
+        if (!appointmentDate.isValid()) {
+            System.out.println("Appointment date: " + dateStr + " is not a valid calendar date.");
+            return false;
+        }
+
+        if (appointmentDate.isToday() || appointmentDate.isInThePast()) {
+            System.out.println("Appointment date: " + dateStr + " is today or a date before today.");
+            return false;
+        }
+
+        if (appointmentDate.isWeekend()) {
+            System.out.println("Appointment date: " + dateStr + " is Saturday or Sunday.");
+            return false;
+        }
+
+        if (!(appointmentDate.isWithinSixMonths())) {
+            System.out.println("Appointment date: " + dateStr + " is not six months within.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean checkDOB(String dobStr) {
+        Date dob = parseDate(dobStr);
+
+        // Check if the date is null, meaning it couldn't be parsed correctly
+        if (dob == null || !dob.isValid()) {
+            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date.");
+            return false; // Invalid date
+        }
+
+        // Check if the DOB is today
+        if (dob.isToday()) {
+            System.out.println(dobStr + " is today or a date after today.");
+            return false; // Assuming DOB cannot be today, return false
+        }
+
+        // Check if the DOB is in the future
+        Calendar today = Calendar.getInstance();
+        Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
+        if (dob.compareTo(todayDate) > 0) {
+            System.out.println(dobStr + " is today or a date after today.");
+            return false;
+        }
+
+        return true; // DOB is valid
+    }
+
+    private static boolean isNumeric(String str) {
+        return str != null && str.matches("\\d+");
+    }
+
+    private static boolean isValidTimeSlot(String timeslotStr) {
+        // Check if the timeslot string is numeric
+        if (!isNumeric(timeslotStr)) {
+            System.out.println(timeslotStr + " is not a valid time slot.");
+            return false; // Invalid format
+        }
+
+        int timeslot = Integer.parseInt(timeslotStr);
+        // Check if the timeslot is within the valid range
+        if (timeslot < 1 || timeslot > 6) {
+            System.out.println(timeslot + " is not a valid time slot.");
+            return false; // Out of range
+        }
+        return true; // Valid timeslot
+    }
+
+
+
+
+
+
 
 
 }
