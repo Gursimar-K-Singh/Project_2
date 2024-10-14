@@ -328,7 +328,7 @@ public class ClinicManager {
         // Schedule the imaging appointment
         Imaging imagingAppointment = new Imaging(appDate, timeslotImg, patientImg, nextTechnician, roomType);
         appointments.add(imagingAppointment);
-        System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + imagingServiceStr + ".");
+        System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + ImagingService + ".");
     }
 
 
@@ -497,6 +497,46 @@ public class ClinicManager {
         return true;
     }
 
+    private boolean hasExistingAppointment(Patient patient, Date date, Timeslot timeslot) {
+        if (appointments == null || appointments.isEmpty()) {
+            return false;  // No appointments exist
+        }
+
+        // Iterate over the appointmentList to find a matching appointment
+        for (Appointment appointment : appointments) {
+            // Check if the appointment's date, timeslot, and patient match
+            if (appointment.getDate().equals(date) &&
+                    appointment.getTimeslot().equals(timeslot) &&
+                    appointment.getPatient().equals(patient)) {
+                return true;  // An existing appointment was found
+            }
+        }
+        return false;
+    }
+
+    private Radiology parseImagingService(String serviceStr) {
+        if (serviceStr == null || serviceStr.trim().isEmpty()) {
+            System.out.println("Invalid imaging service.");
+            return null;
+        }
+        // Convert serviceStr to lowercase and trim it to avoid case or space issues
+        serviceStr = serviceStr.trim().toLowerCase();
+        // Match the string to the corresponding Radiology service
+        switch(serviceStr){
+            case "xray":
+                return Radiology.XRAY;
+            case "ultrasound":
+                return Radiology.ULTRASOUND;
+            case "catscan":
+            case "ctscan": //"ctscan"
+                return Radiology.CATSCAN;
+            default:
+                System.out.println("Unknown imaging service: " + serviceStr);
+                return null;  // Return null if the service doesn't match any known type
+        }
+    }
+
+    //Validation,print, parse methods
 
 
 
