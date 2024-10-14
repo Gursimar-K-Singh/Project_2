@@ -7,10 +7,10 @@ import java.util.Calendar;
  * It provides various methods to validate the date, check for leap years, compare dates,
  * and determine if the date falls on a weekend, is in the past, or is within six months from today.
  * Implements the Comparable interface to compare two Date objects.
+ *
  * Constants are defined for the leap year calculation and the number of days in specific months.
  *
- * @author AparnaSrinivas
- * @author GursimarSingh
+ * @author AparnaSrinivas,GursimarSingh
  */
 public class Date implements Comparable<Date> {
     private int year, month, day;
@@ -21,8 +21,6 @@ public class Date implements Comparable<Date> {
     public static final int month_with_30_days = 30;
     public static final int feb_leap = 29;
     public static final int feb = 28;
-    public static final int year1900 = 1900;
-
 
     /**
      * Constructor method to create a Date object.
@@ -49,10 +47,9 @@ public class Date implements Comparable<Date> {
      */
     public boolean isValid() {
 
-        if(year < year1900){
+        if(year < 1900){
             return false;
         }
-
 
         if (month < Calendar.JANUARY|| month > Calendar.DECEMBER) {
             return false;
@@ -212,11 +209,6 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
-    /**
-     * Checks if the date falls on a weekend (Saturday or Sunday).
-     *
-     * @return true if the date is a weekend, false otherwise.
-     */
     public boolean isWeekend() {
         Calendar cal = Calendar.getInstance();
         cal.set(this.year, this.month, this.day);
@@ -225,11 +217,6 @@ public class Date implements Comparable<Date> {
         return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
     }
 
-    /**
-     * Checks if the date is within six months from today.
-     *
-     * @return true if the date is within six months, false otherwise.
-     */
     public boolean isWithinSixMonths() {
         Calendar today = Calendar.getInstance(); // Get the current date
         Calendar sixMonthsLater = Calendar.getInstance(); // Create a calendar for six months later
@@ -241,11 +228,6 @@ public class Date implements Comparable<Date> {
         return dateToCheck.before(sixMonthsLater) || dateToCheck.equals(sixMonthsLater);
     }
 
-    /**
-     * Test cases for the Date class.
-     *
-     * @param args Command-line arguments (not used).
-     */
     public static void main(String[] args) {
         // Test cases
         Date date1 = new Date(1, 32, 2025);// Invalid as Jan has only 31 days
@@ -261,7 +243,7 @@ public class Date implements Comparable<Date> {
         System.out.println(date4.isValid());
         System.out.println(date5.isValid());
         System.out.println(date6.isValid());
-
     }
 }
+
 

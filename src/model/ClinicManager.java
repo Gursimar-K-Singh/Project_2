@@ -3,10 +3,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Calendar;
-//util package required for Scanner
-import util.List;
 import util.Date;
-
+import util.sort;
+import util.List;
 
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers
@@ -102,52 +101,12 @@ public class ClinicManager {
 
     }
 
+
     //Displays sorted providers
     private void displayProviders() {
         System.out.println("List of providers:");
         for (Provider provider : providers) {
             System.out.println(provider);
-        }
-    }
-
-    private void initializeTechniciansList() {
-        //to empty the existing list, if any
-        techniciansList.clear();
-        try {
-            // Assuming that technicians are stored in a file named "providers.txt"
-            File file = new File("providers.txt");
-            Scanner scanner = new Scanner(file);
-
-            while (scanner.hasNextLine()) {
-                String inLine = scanner.nextLine().trim();
-
-                // Parse each line to create a Technician object
-                Provider provider = parseProvider(inLine);
-
-                // Check if the parsed provider is a Technician and add it to the list
-                if (provider instanceof Technician) {
-                    techniciansList.add((Technician) provider);
-                }
-            }
-
-            scanner.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: Provider file not found.");
-        }
-
-        // Optionally, print the technicians list for debugging
-        System.out.println("Technicians initialized: ");
-        printTechniciansList();
-    }
-
-    private void printTechniciansList() {
-        if (techniciansList.isEmpty()) {
-            System.out.println("No technicians available.");
-            return;}
-        System.out.println("List of Technicians:");
-        for (Technician technician : techniciansList) {
-            System.out.println(technician);  // Assuming Technician class overrides toString() for proper output
         }
     }
 
@@ -184,7 +143,6 @@ public class ClinicManager {
         }
     }
 
-    //Methods for handling appointments
     // Placeholder methods for various actions
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
@@ -215,7 +173,7 @@ public class ClinicManager {
 
         Doctor doc = findDoctor(docNPInum);
         if (doc == null) {
-            System.out.println("Error: Doctor with NPI " + doctorNPI + " not found.");
+            System.out.println("Error: Doctor with NPI " + docNPInum + " not found.");
             return;
         }
 
@@ -299,7 +257,7 @@ public class ClinicManager {
         // Validate imaging service
         Radiology roomType = getRadiologyType(imagingType);
         if (roomType == null) {
-            System.out.println("Error: Invalid imaging service: " + imagingServiceStr);
+            System.out.println("Error: Invalid imaging service: " + imagingType);
             return;
         }
 
@@ -328,7 +286,7 @@ public class ClinicManager {
         // Schedule the imaging appointment
         Imaging imagingAppointment = new Imaging(appDate, timeslotImg, patientImg, nextTechnician, roomType);
         appointments.add(imagingAppointment);
-        System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + ImagingService + ".");
+        System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + imagingServiceStr + ".");
     }
 
 
@@ -419,267 +377,16 @@ public class ClinicManager {
         Provider provider = existingAppointment.getProvider(); // Assuming getProvider() exists
         Appointment newAppointment = new Appointment(appDate, newTimeslot, patient, existingAppointment.getProvider());
 
-        if (!appointments.isAvailable(newAppointment)) {
+        if (!appointmentList.isAvailable(newAppointment)) {
             System.out.println(provider + " is not available at " + newTimeslot +".");
             return;
         }
 
         handleAppointmentAddition(newAppointment);
-        appointments.remove(oldAppointment);
-        appointments.add(newAppointment);
+        appointmentList.remove(oldAppointment);
+        appointmentList.add(newAppointment);
         System.out.println("Rescheduled to "+ newAppointment.toString() );
     }
-
-    private Appointment findAppointmentforRescheduling(Date appDate, Timeslot timeslot, Profile patient) {
-        if (appointments == null || appointments.isEmpty()) {
-            return null;  // No appointments to search through
-        }
-        // Iterate over all appointments in the appointmentList
-        for (int i = 0; i < appointments.size(); i++) {
-            Appointment appointment = appointments.get(i);
-            // Compare the date, timeslot, and patient profile for a match
-            if (appointment.getDate().equals(appDate) &&
-                    appointment.getTimeslot().equals(timeslot) &&
-                    appointment.getPatient().getProfile().equals(patient)) {
-                return appointment;  // Return the matching appointment
-            }
-        }
-        // If no appointment matches, return null
-        return null;
-    }
-
-    private Appointment findCancellingAppointment(Date appDate, Timeslot timeslot, Profile patient) {
-        if (appointments == null || appointments.isEmpty()) {
-            System.out.println("No appointments to search for cancellation.");
-            return null;
-        }
-        // Iterate through the appointmentList to find a matching appointment
-        for (int i = 0; i < appointments.size(); i++) {
-            Appointment appointment = appointments.get(i);
-            // Checks if the appointment's date, timeslot, and patient profile match
-            if (appointment.getDate().equals(appDate) &&
-                    appointment.getTimeslot().equals(timeslot) &&
-                    appointment.getPatient().getProfile().equals(patient)) {
-                return appointment;  // Return the appointment if found
-            }
-        }
-        // If no match is found, return null
-        return null;
-    }
-
-    private Technician findTechnicianAvailable(Timeslot timeslot, Radiology room) {
-        if (techniciansList == null || techniciansList.isEmpty()) {
-            System.out.println("No technicians available.");
-            return null;
-        }
-        // Iterate over the circular list of technicians
-        for (int i = 0; i < techniciansList.size(); i++) {
-            Technician technician = techniciansList.get(i);
-            // Check if the technician is available at the given timeslot and room
-            if (technician.isAvailable(timeslot) && technician.hasRoom(room)) {
-                return technician;  // Return the first available technician
-            }
-        }
-        // If no available technician is found, return null
-        return null;
-    }
-
-    private boolean TechnicianAvailability(Technician technician, Timeslot timeslot, Radiology room) {
-        // Check if the technician is available during the specified timeslot
-        if (!technician.isAvailable(timeslot)) {
-            return false;  // Technician is not available at this timeslot
-        }
-        // Check if the technician is assigned to the given radiology room
-        if (!technician.hasRoom(room)) {
-            return false;  // Technician is not assigned to the specified room
-        }
-        // If both conditions are met, the technician is available
-        return true;
-    }
-
-    private boolean hasExistingAppointment(Patient patient, Date date, Timeslot timeslot) {
-        if (appointments == null || appointments.isEmpty()) {
-            return false;  // No appointments exist
-        }
-
-        // Iterate over the appointmentList to find a matching appointment
-        for (int i = 0; i < appointments.size(); i++) {
-            Appointment appointment = appointments.get(i);
-            // Check if the appointment's date, timeslot, and patient match
-            if (appointment.getDate().equals(date) &&
-                    appointment.getTimeslot().equals(timeslot) &&
-                    appointment.getPatient().equals(patient)) {
-                return true;  // An existing appointment was found
-            }
-        }
-        return false;
-    }
-
-    private Radiology parseImagingService(String serviceStr) {
-        if (serviceStr == null || serviceStr.trim().isEmpty()) {
-            System.out.println("Invalid imaging service.");
-            return null;
-        }
-        // Convert serviceStr to lowercase and trim it to avoid case or space issues
-        serviceStr = serviceStr.trim().toLowerCase();
-        // Match the string to the corresponding Radiology service
-        switch(serviceStr){
-            case "xray":
-                return Radiology.XRAY;
-            case "ultrasound":
-                return Radiology.ULTRASOUND;
-            case "catscan":
-            case "ctscan": //"ctscan"
-                return Radiology.CATSCAN;
-            default:
-                System.out.println("Unknown imaging service: " + serviceStr);
-                return null;  // Return null if the service doesn't match any known type
-        }
-    }
-
-    //Validation,print, parse methods
-    private void displayApppointmentsScheduled() {
-        if (appointments == null || appointments.isEmpty()) {
-            System.out.println("No appointments have been scheduled.");
-            return;
-        }
-
-        System.out.println("Scheduled Appointments:");
-
-        for (int i = 0; i < appointments.size(); i++) {
-            Appointment appointment = appointments.get(i);
-            System.out.println(appointment);  // Assuming the Appointment class has a proper toString() implementation
-        }
-    }
-
-    //need to fix this!!!
-    private static Timeslot parseTimeslot(String timeslotStr) {
-        switch (timeslotStr.trim()) {
-            case "1":
-                return Timeslot.SLOT1;
-            case "2":
-                return Timeslot.SLOT2;
-            case "3":
-                return Timeslot.SLOT3;
-            case "4":
-                return Timeslot.SLOT4;
-            case "5":
-                return Timeslot.SLOT5;
-            case "6":
-                return Timeslot.SLOT6;
-            default:
-                return null;
-        }
-    }
-
-    private boolean scheduleAppPossibility(Appointment newAppointment, Provider provider) {
-
-    }
-
-    private static Provider parseProvider(String providerStr) {
-        try {
-            return Provider.valueOf(providerStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    private static Date parseDate(String dateStr) {
-        String[] dateTokens = dateStr.split("/");
-        if (dateTokens.length != 3) {
-            return null;  // Invalid date format
-        }
-
-        int month = Integer.parseInt(dateTokens[0]);
-        int day = Integer.parseInt(dateTokens[1]);
-        int year = Integer.parseInt(dateTokens[2]);
-        return new Date(month, day, year);  // Return new Date object
-
-    }
-
-    private static boolean validateAppointmentDate(String dateStr) {
-        Date appointmentDate = parseDate(dateStr);
-
-        if (!appointmentDate.isValid()) {
-            System.out.println("Appointment date: " + dateStr + " is not a valid calendar date.");
-            return false;
-        }
-
-        if (appointmentDate.isToday() || appointmentDate.isInThePast()) {
-            System.out.println("Appointment date: " + dateStr + " is today or a date before today.");
-            return false;
-        }
-
-        if (appointmentDate.isWeekend()) {
-            System.out.println("Appointment date: " + dateStr + " is Saturday or Sunday.");
-            return false;
-        }
-
-        if (!(appointmentDate.isWithinSixMonths())) {
-            System.out.println("Appointment date: " + dateStr + " is not six months within.");
-            return false;
-        }
-
-        return true;
-    }
-
-    private static boolean checkDOB(String dobStr) {
-        Date dob = parseDate(dobStr);
-
-        // Check if the date is null, meaning it couldn't be parsed correctly
-        if (dob == null || !dob.isValid()) {
-            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date.");
-            return false; // Invalid date
-        }
-
-        // Check if the DOB is today
-        if (dob.isToday()) {
-            System.out.println(dobStr + " is today or a date after today.");
-            return false; // Assuming DOB cannot be today, return false
-        }
-
-        // Check if the DOB is in the future
-        Calendar today = Calendar.getInstance();
-        Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
-        if (dob.compareTo(todayDate) > 0) {
-            System.out.println(dobStr + " is today or a date after today.");
-            return false;
-        }
-
-        return true; // DOB is valid
-    }
-
-    private static boolean isNumeric(String str) {
-        return str != null && str.matches("\\d+");
-    }
-
-    private static boolean isValidTimeSlot(String timeslotStr) {
-        // Check if the timeslot string is numeric
-        if (!isNumeric(timeslotStr)) {
-            System.out.println(timeslotStr + " is not a valid time slot.");
-            return false; // Invalid format
-        }
-
-        int timeslot = Integer.parseInt(timeslotStr);
-        // Check if the timeslot is within the valid range
-        if (timeslot < 1 || timeslot > 6) {
-            System.out.println(timeslot + " is not a valid time slot.");
-            return false; // Out of range
-        }
-        return true; // Valid timeslot
-    }
-
-
-
-
-
-
-
-
-}
-
-
-
 
     private void displayOfficeAppointments() {
         // Implementation to display office appointments
