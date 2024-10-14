@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Calendar;
+//util package required for Scanner
 
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers
@@ -60,6 +61,32 @@ public class ClinicManager {
         }
     }
 
+    private void initializeTechniciansList() {
+        //Empty existing list to be safe
+        techniciansList.clear();
+
+        try{
+            File file = new File("providers.txt");
+            Scanner scanner = new Scanner(file);//need to install util package
+
+            while(scanner.hasNextLine()){
+                String inLine = scanner.nextLine().trim();
+                    //parse line-by-line to make Technician obj
+                Provider provider = parseProvider(inLine);
+                    //checks if parsed provider is technician, if so added to list
+                if(provider instanceof Technician){
+                    techniciansList.add((Technician) provider);
+                }
+            }
+            scanner.close();
+        } catch(FileNotFoundException e){
+            System.out.println("Error: Provider file not found.");
+        }
+        System.out.println("Technicians initialized: ");
+        printTechniciansList();
+    }
+
+
     //double check method!!!
     private Provider parseProvider(String inLine){
         String[] tokens = inLine.split(",");
@@ -104,6 +131,20 @@ public class ClinicManager {
         System.out.println("List of providers:");
         for (Provider provider : providers) {
             System.out.println(provider);
+        }
+    }
+
+    private void printTechniciansList() {
+        //check if list is empty
+        if (techniciansList.isEmpty()) {
+            System.out.println("No technicians available.");
+            return;
+        }
+
+        System.out.println("List of Technicians:");
+
+        for (Technician technician : techniciansList) {
+            System.out.println(technician);  // Assuming Technician class overrides toString() for proper output
         }
     }
 
@@ -285,7 +326,6 @@ public class ClinicManager {
         appointments.add(imagingAppointment);
         System.out.println("Imaging appointment scheduled successfully for " + firstName + " " + lastName + " for " + imagingServiceStr + ".");
     }
-
 
     private void cancelAppointment(String[] tokens) {
         // Implementation for canceling an appointment
