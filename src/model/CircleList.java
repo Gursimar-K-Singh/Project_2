@@ -1,5 +1,5 @@
 package model;
-
+import util.List;
 
 public class CircleList<E> extends List<E> {
     private int currentIndex;
@@ -23,4 +23,5 @@ public class CircleList<E> extends List<E> {
     public void reset() {
         currentIndex = 0;
     }
+
 }

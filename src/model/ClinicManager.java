@@ -16,7 +16,7 @@ public class ClinicManager {
         this.techniciansList = new CircleList<>();
         loadProviders();
         //initializeTechniciansList();
-        Sort.provider(providers);
+        //Sort.provider(providers);
         displayProviders();
         //printTechniciansList();
         System.out.println("Clinic Manager is running.");
@@ -85,12 +85,12 @@ public class ClinicManager {
             // If this is a Doctor, additional tokens may include specialty information
             String specialtyStr = tokens[5].trim();  // Example: "Cardiology"
             Specialty specialty = Specialty.valueOf(specialtyStr.toUpperCase());  // Assuming enum for specialties
-            return new Doctor(profile, specialty, npi);  // Create and return Doctor object
+            //return new Doctor(profile, specialty, npi);  // Create and return Doctor object
 
         } else if (providerType.equals("technician")) {
             // If this is a Technician, additional tokens may include rate per visit
             int ratePerVisit = Integer.parseInt(tokens[5].trim());  // Example: "150"
-            return new Technician(profile, ratePerVisit);  // Create and return Technician object
+            //return new Technician(profile, ratePerVisit);  // Create and return Technician object
 
         } else {
             System.out.println("Unknown provider type: " + providerType);
@@ -209,7 +209,7 @@ public class ClinicManager {
 
     //helper method to find doctor by NPI#
     private Doctor findDoctor(String npi) {
-        for (int i = 0; i < providers.getSize(); i++) {
+        for (int i = 0; i < providers.size(); i++) {
             Provider provider = providers.get(i);
             if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
                 return (Doctor) provider; // Return the found Doctor
@@ -322,9 +322,9 @@ public class ClinicManager {
             return;
         }
 
-        if (appointmentList.contains(appointment)) {
+        if (appointments.contains(appointment)) {
             System.out.println(appointment + " has been canceled.");
-            appointmentList.remove(appointment);
+            appointments.remove(appointment);
         } else {
             System.out.println(appointment + " does not exist.");
         }
@@ -350,7 +350,7 @@ public class ClinicManager {
             return;
         }
 
-        if (appointmentList == null) {
+        if (appointments == null) {
             System.out.println("No appointments exist to reschedule.");
             return;
         }
@@ -362,7 +362,7 @@ public class ClinicManager {
         Profile patient = new Profile(firstName, lastName, dob);
         Appointment oldAppointment = new Appointment(appDate, oldTimeslot, patient, null);
 
-        if (!appointmentList.contains(oldAppointment)) {
+        if (!appointments.contains(oldAppointment)) {
             System.out.println(appDate.toString() + " " + oldTimeslot.toString() + " " + firstName + " " + lastName + " " + dob.toString() + " does not exist.");
             return;
         }
@@ -375,14 +375,14 @@ public class ClinicManager {
         Provider provider = existingAppointment.getProvider(); // Assuming getProvider() exists
         Appointment newAppointment = new Appointment(appDate, newTimeslot, patient, existingAppointment.getProvider());
 
-        if (!appointmentList.isAvailable(newAppointment)) {
+        if (!appointments.isAvailable(newAppointment)) {
             System.out.println(provider + " is not available at " + newTimeslot +".");
             return;
         }
 
         handleAppointmentAddition(newAppointment);
-        appointmentList.remove(oldAppointment);
-        appointmentList.add(newAppointment);
+        appointments.remove(oldAppointment);
+        appointments.add(newAppointment);
         System.out.println("Rescheduled to "+ newAppointment.toString() );
     }
 
@@ -398,10 +398,7 @@ public class ClinicManager {
         // Implementation to display provider credit amounts
     }
 
-    //Main
-    public static void main(String[] args){
-        new ClinicManager().run();
-    }
+
 
 }
 
