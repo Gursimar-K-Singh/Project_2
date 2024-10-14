@@ -116,7 +116,7 @@ public class List<E> implements Iterable<E>{
      */
     @Override
     public Iterator<E> iterator() {
-        return new model.List.ListIterator();
+        return new util.List.ListIterator();
     }
 
     /**
