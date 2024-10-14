@@ -184,6 +184,7 @@ public class ClinicManager {
         }
     }
 
+    //Methods for handling appointments
     // Placeholder methods for various actions
     private void scheduleOfficeAppointment(String[] tokens) {
         // Implementation for scheduling an office appointment
@@ -360,14 +361,14 @@ public class ClinicManager {
         // Create the appointment object to search for
 
         // Check if the appointmentList exists and has appointments
-        if (appointmentList == null) {
+        if (appointments == null) {
             System.out.println("No appointments exist to cancel.");
             return;
         }
 
-        if (appointmentList.contains(appointment)) {
+        if (appointments.contains(appointment)) {
             System.out.println(appointment + " has been canceled.");
-            appointmentList.remove(appointment);
+            appointments.remove(appointment);
         } else {
             System.out.println(appointment + " does not exist.");
         }
@@ -393,7 +394,7 @@ public class ClinicManager {
             return;
         }
 
-        if (appointmentList == null) {
+        if (appointments == null) {
             System.out.println("No appointments exist to reschedule.");
             return;
         }
@@ -405,7 +406,7 @@ public class ClinicManager {
         Profile patient = new Profile(firstName, lastName, dob);
         Appointment oldAppointment = new Appointment(appDate, oldTimeslot, patient, null);
 
-        if (!appointmentList.contains(oldAppointment)) {
+        if (!appointments.contains(oldAppointment)) {
             System.out.println(appDate.toString() + " " + oldTimeslot.toString() + " " + firstName + " " + lastName + " " + dob.toString() + " does not exist.");
             return;
         }
@@ -418,15 +419,35 @@ public class ClinicManager {
         Provider provider = existingAppointment.getProvider(); // Assuming getProvider() exists
         Appointment newAppointment = new Appointment(appDate, newTimeslot, patient, existingAppointment.getProvider());
 
-        if (!appointmentList.isAvailable(newAppointment)) {
+        if (!appointments.isAvailable(newAppointment)) {
             System.out.println(provider + " is not available at " + newTimeslot +".");
             return;
         }
 
         handleAppointmentAddition(newAppointment);
-        appointmentList.remove(oldAppointment);
-        appointmentList.add(newAppointment);
+        appointments.remove(oldAppointment);
+        appointments.add(newAppointment);
         System.out.println("Rescheduled to "+ newAppointment.toString() );
+    }
+
+    private Appointment findAppointmentforRescheduling(Date appointmentDate, Timeslot timeslot, Profile patientProfile) {
+        if (appointments == null || appointments.isEmpty()) {
+            return null;  // No appointments to search through
+        }
+
+        // Iterate over all appointments in the appointmentList
+        for (int i = 0; i < appointments.getSize(); i++) {
+            Appointment appointment = appointments.get(i);
+            // Compare the date, timeslot, and patient profile for a match
+            if (appointment.getDate().equals(appointmentDate) &&
+                    appointment.getTimeslot().equals(timeslot) &&
+                    appointment.getPatient().getProfile().equals(patientProfile)) {
+                return appointment;  // Return the matching appointment
+            }
+        }
+
+        // If no appointment matches, return null
+        return null;
     }
 
     private void displayOfficeAppointments() {
