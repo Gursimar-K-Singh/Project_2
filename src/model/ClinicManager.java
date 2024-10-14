@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Calendar;
-import util.Date;
 
 public class ClinicManager {
     private List<Provider> providers; // List to hold all providers

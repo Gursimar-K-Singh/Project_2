@@ -1,8 +1,9 @@
-package model;
+package util;
 
+import model.Appointment;
+import model.Provider;
 
-public class Sort {
-
+public class sort {
     public static void appointment(List<Appointment> list, char key) {
         List<Appointment> sortedList = new List<>();
 

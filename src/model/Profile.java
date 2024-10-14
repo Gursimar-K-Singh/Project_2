@@ -1,4 +1,5 @@
 package model;
+import util.Date;
 
 /**
  * The Profile class represents an individual's profile with a first name, last name, and date of birth.
