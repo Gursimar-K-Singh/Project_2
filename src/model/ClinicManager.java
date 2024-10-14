@@ -102,12 +102,52 @@ public class ClinicManager {
 
     }
 
-
     //Displays sorted providers
     private void displayProviders() {
         System.out.println("List of providers:");
         for (Provider provider : providers) {
             System.out.println(provider);
+        }
+    }
+
+    private void initializeTechniciansList() {
+        //to empty the existing list, if any
+        techniciansList.clear();
+        try {
+            // Assuming that technicians are stored in a file named "providers.txt"
+            File file = new File("providers.txt");
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String inLine = scanner.nextLine().trim();
+
+                // Parse each line to create a Technician object
+                Provider provider = parseProvider(inLine);
+
+                // Check if the parsed provider is a Technician and add it to the list
+                if (provider instanceof Technician) {
+                    techniciansList.add((Technician) provider);
+                }
+            }
+
+            scanner.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Provider file not found.");
+        }
+
+        // Optionally, print the technicians list for debugging
+        System.out.println("Technicians initialized: ");
+        printTechniciansList();
+    }
+
+    private void printTechniciansList() {
+        if (techniciansList.isEmpty()) {
+            System.out.println("No technicians available.");
+            return;}
+        System.out.println("List of Technicians:");
+        for (Technician technician : techniciansList) {
+            System.out.println(technician);  // Assuming Technician class overrides toString() for proper output
         }
     }
 
