@@ -253,7 +253,7 @@ public class ClinicManager {
 
     //helper method to find doctor by NPI#
     private Doctor findDoctor(String npi) {
-        for (int i = 0; i < providers.getSize(); i++) {
+        for (int i = 0; i < providers.size(); i++) {
             Provider provider = providers.get(i);
             if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
                 return (Doctor) provider; // Return the found Doctor
@@ -434,9 +434,8 @@ public class ClinicManager {
         if (appointments == null || appointments.isEmpty()) {
             return null;  // No appointments to search through
         }
-
         // Iterate over all appointments in the appointmentList
-        for (int i = 0; i < appointments.getSize(); i++) {
+        for (int i = 0; i < appointments.size(); i++) {
             Appointment appointment = appointments.get(i);
             // Compare the date, timeslot, and patient profile for a match
             if (appointment.getDate().equals(appointmentDate) &&
@@ -445,10 +444,12 @@ public class ClinicManager {
                 return appointment;  // Return the matching appointment
             }
         }
-
         // If no appointment matches, return null
         return null;
     }
+
+    private Appointment findAppointmentToCancel(Date appointmentDate, Timeslot timeslot, Profile patientProfile) { /* ... */ }
+
 
     private void displayOfficeAppointments() {
         // Implementation to display office appointments
