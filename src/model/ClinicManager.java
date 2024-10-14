@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.Calendar;
 import util.List;
 import util.Date;
+import util.sort;
 
 
 public class ClinicManager {
@@ -224,7 +225,6 @@ public class ClinicManager {
     private void scheduleImagingAppointment(String[] tokens) {
         // Implementation for scheduling an imaging appointment
         if (tokens.length < 7) {
-            System.out.println("Error: Missing data tokens.");
             return;
         }
 
