@@ -503,7 +503,8 @@ public class ClinicManager {
         }
 
         // Iterate over the appointmentList to find a matching appointment
-        for (Appointment appointment : appointments) {
+        for (int i = 0; i < appointments.size(); i++) {
+            Appointment appointment = appointments.get(i);
             // Check if the appointment's date, timeslot, and patient match
             if (appointment.getDate().equals(date) &&
                     appointment.getTimeslot().equals(timeslot) &&
@@ -537,6 +538,24 @@ public class ClinicManager {
     }
 
     //Validation,print, parse methods
+    private void displayApppointmentsScheduled() {
+        if (appointments == null || appointments.isEmpty()) {
+            System.out.println("No appointments have been scheduled.");
+            return;
+        }
+
+        System.out.println("Scheduled Appointments:");
+
+        for (int i = 0; i < appointments.size(); i++) {
+            Appointment appointment = appointments.get(i);
+            System.out.println(appointment);  // Assuming the Appointment class has a proper toString() implementation
+        }
+    }
+
+
+
+}
+
 
 
 
