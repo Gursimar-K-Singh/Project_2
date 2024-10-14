@@ -1,4 +1,5 @@
 package model;
+import util.Date;
 
 public class Imaging extends Appointment {
 

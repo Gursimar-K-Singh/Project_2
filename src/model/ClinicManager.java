@@ -6,6 +6,8 @@ import java.util.Calendar;
 //util package required for Scanner
 import util.List;
 import util.Date;
+import util.CircleList;
+import util.sort;
 
 
 public class ClinicManager {
@@ -19,7 +21,7 @@ public class ClinicManager {
         this.techniciansList = new CircleList<>();
         loadProviders();
         initializeTechniciansList();
-        Sort.provider(providers);
+        sort.provider(providers);
         displayProviders();
         printTechniciansList();
         System.out.println("Clinic Manager is running.");
