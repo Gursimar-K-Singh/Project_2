@@ -241,6 +241,36 @@ public class ClinicManager {
         scanner.close();
     }
 
+    private static boolean validateAppointmentDate(String dateStr) {
+        Date appointmentDate = convertToDate(dateStr);
+
+        if (!appointmentDate.isValid()) {
+            System.out.println("Appointment date: " + dateStr + " is not a valid calendar date.");
+            return false;
+        }
+
+        if (appointmentDate.isToday() || appointmentDate.isInThePast()) {
+            System.out.println("Appointment date: " + dateStr + " is today or a date before today.");
+            return false;
+        }
+
+        if (appointmentDate.isWeekend()) {
+            System.out.println("Appointment date: " + dateStr + " is Saturday or Sunday.");
+            return false;
+        }
+
+        if (!(appointmentDate.isWithinSixMonths())) {
+            System.out.println("Appointment date: " + dateStr + " is not six months within.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean isNumeric(String str) {
+        return str != null && str.matches("\\d+");
+    }
+
 
 
 
