@@ -28,7 +28,7 @@ public class ClinicManager {
         loadProviderList(); //load + sort providers + instantiate technician rotation
         //initializeTechnicianRotation(); //load technician rotation circular list (before sorting providers)
         sort.provider(providerList); //Sort providers
-        //displayProviders(); //print providers
+        displayProviders(); //print providers
         //printTechnicianRotation(); //print technician rotation circular list
     }
 
@@ -54,6 +54,18 @@ public class ClinicManager {
             System.out.println("Error: 'providers.txt' file not found.");
         }
     }
+
+    /**
+     * Prints the list of providers after sorting by profile.
+     */
+    private void displayProviders() {
+        sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
+        for (Provider provider : providerList) {
+            System.out.println(provider);
+        }
+    }
+
+
 
     /**
      * Converts a line of text into a Provider object.
@@ -106,7 +118,7 @@ public class ClinicManager {
                 return loc;
             }
         }
-        throw new IllegalArgumentException("Error: Unknown location '" + locationString + "'.");
+        throw new IllegalArgumentException("Invalid Location '" + locationString + "'.");
     }
 
     /**
@@ -140,6 +152,15 @@ public class ClinicManager {
         int day = Integer.parseInt(dateTokens[1]);
         int year = Integer.parseInt(dateTokens[2]);
         return new Date(month, day, year);  // Return new Date object
+    }
+
+
+    public static void main(String[] args) {
+        // Create an instance of ClinicManager
+        ClinicManager clinicManager = new ClinicManager();
+
+        // The constructor already calls loadProviderList and displayProviders,
+        // so no additional method calls are needed.
     }
 
 

@@ -1,4 +1,5 @@
 package model;
+import util.Date;
 
 import org.junit.Test;
 
