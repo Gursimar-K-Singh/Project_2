@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 
 public class ClinicManager {
 
-    private List<Provider> providerList;
+    private  List<Provider> providerList;
     private List<Appointment> appointmentList;
     private CircleList<Technician> technicianList;
 
@@ -26,10 +26,10 @@ public class ClinicManager {
         this.technicianList = new CircleList<>();
 
         loadProviderList(); //load + sort providers + instantiate technician rotation
-        //initializeTechnicianRotation(); //load technician rotation circular list (before sorting providers)
+        initializeTechnicianRotation(); //load technician rotation circular list (before sorting providers)
         sort.provider(providerList); //Sort providers
         displayProviders(); //print providers
-        //printTechnicianRotation(); //print technician rotation circular list
+        printTechnicianRotation(); //print technician rotation circular list
     }
 
     /**
@@ -154,6 +154,38 @@ public class ClinicManager {
         return new Date(month, day, year);  // Return new Date object
     }
 
+    /**
+     * Sets up the technician rotation list by including technicians from the providers list
+     * in reverse order, beginning with the last technician added.
+     */
+    private void initializeTechnicianRotation() {
+        // Traverse the providers list from the end to the beginning
+        for (int index = providerList.size() - 1; index >= 0; index--) {
+            Provider currentProvider = providerList.get(index);
+            // Check if the current provider is a technician
+            if (currentProvider instanceof Technician) {
+                technicianList.add((Technician) currentProvider);  // Add technicians in reverse order
+            }
+        }
+    }
+
+    /**
+     * Displays the current technician rotation list, showing each technician's first and last names along with their locations.
+     */
+    private void printTechnicianRotation() {
+        System.out.println("\nCurrent technician rotation list:");
+        for (int index = 0; index < technicianList.size(); index++) {
+            Technician currentTechnician = technicianList.get(index);
+            System.out.print(currentTechnician.getProfile().getFname() + " " + currentTechnician.getProfile().getLname() +
+                    " (" + currentTechnician.getLocation().name() + ")");
+            // Add arrow between technicians except for the last one
+            if (index < technicianList.size() - 1) {
+                System.out.print(" --> ");
+            }
+        }
+        System.out.println(); // Move to the next line after printing the rotation
+    }
+
 
     public static void main(String[] args) {
         // Create an instance of ClinicManager
@@ -161,6 +193,52 @@ public class ClinicManager {
 
         // The constructor already calls loadProviderList and displayProviders,
         // so no additional method calls are needed.
+    }
+
+    // Method to run the Clinic Manager
+    /**
+     * Runs the main loop of the Clinic Manager, processing user commands for scheduling,
+     * canceling, and managing appointments.
+     */
+    public void run() {
+        System.out.println("Clinic Manager is running...\n");
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            if (!scanner.hasNextLine()) {
+                break; // Break the loop if there is no more input
+            }
+
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue; // ignores lines that are empty
+
+            String[] tokens = input.split(",");
+            String command = tokens[0].trim();
+
+            //Execute the command
+            switch (command) {
+                case "D": //scheduleOfficeAppointment(tokens); break;
+                case "T": //scheduleImagingAppointment(tokens); break;
+                case "C": //cancelAppointment(tokens); break;
+                case "R": //rescheduleAppointment(tokens); break;
+                case "PO": //printOfficeAppointments() ; break;
+                case "PI": //printImagingAppointments(); break;
+                case "PC": //printProviderCredits();; break;
+                case "PA": //printAppointmentsByDateTimeProvider(); break;
+                case "PP": //printAppointmentsByPatient(); break;
+                case "PL": //printAppointmentsByCountyDateTime(); break;
+                case "PS": //printBillingStatement();;;break;
+                case "Q":
+                {
+                    System.out.println("Clinic Manager is terminated.");
+                    scanner.close();
+                    return;
+                }
+                default: System.out.println("Invalid command!");
+            }
+        }
+
+        scanner.close();
     }
 
 
