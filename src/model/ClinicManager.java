@@ -16,7 +16,7 @@ public class ClinicManager {
     // Constants for calculating a date within 6 months
     private static final int TOTAL_MONTHS_IN_YEAR = 12;
     private static final int HALF_YEAR_IN_MONTHS = 6;
-    public static final Timeslot[] TIME_SLOTS = generateTimeslots();
+    //public static final Timeslot[] TIME_SLOTS = generateTimeslots();
 
     public ClinicManager() {
         providerList = new List<>();
