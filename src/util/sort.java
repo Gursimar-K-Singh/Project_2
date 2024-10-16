@@ -2,6 +2,9 @@ package util;
 
 import model.Appointment;
 import model.Provider;
+import java.io.File;
+import java.util.Scanner;
+
 
 public class sort {
     public static void appointment(List<Appointment> list, char key) {
@@ -55,7 +58,7 @@ public class sort {
                 }
                 break;
             case 'P': // Sort by patient (patient profile comparison can be adjusted as needed)
-                comparison = current.getProfile().compareTo(smallest.getProfile()); // Compare by patient profile
+                comparison = current.getPatient().compareTo(smallest.getPatient()); // Compare by patient profile
                 if (comparison == 0) { // If profiles are the same
                     comparison = compareDateAndTime(current, smallest); // Use the new method
                 }
@@ -112,4 +115,9 @@ public class sort {
         }
 
     }
+
+
+
+
+
 }

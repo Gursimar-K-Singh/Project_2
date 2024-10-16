@@ -58,7 +58,7 @@ public class Appointment implements Comparable<Appointment> {
      *
      * @return The patient's profile.
      */
-    public Person getProfile() {
+    public Person getPatient() {
         return patient;
     }
 
