@@ -38,21 +38,34 @@ public class ClinicManager {
      */
     private void loadProviderList() {
         try {
-            File providerFile = new File("providers.txt");
-            Scanner fileScanner = new Scanner(providerFile);
+            // Load the file from the package using getResourceAsStream
+            Scanner fileScanner = new Scanner(getClass().getResourceAsStream("providers.txt"));
 
             while (fileScanner.hasNextLine()) {
                 String providerData = fileScanner.nextLine();
+                System.out.println("Reading line: " + providerData); // Debug print statement
+
                 Provider provider = convertToProvider(providerData);
-                providerList.add(provider);
+                if (provider != null) {
+                    providerList.add(provider);
+                    System.out.println("Provider added: " + provider); // Debug print statement
+                } else {
+                    System.out.println("Invalid format or provider could not be created for line: " + providerData);
+                }
             }
 
             fileScanner.close();
             System.out.println("Providers successfully loaded to the list.");
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: 'providers.txt' file not found.");
+        } catch (NullPointerException e) {
+            System.out.println("Error: 'providers.txt' file not found in the package.");
         }
+    }
+
+
+
+    public static void main(String[] args){
+        new ClinicManager();
     }
 
     /**
@@ -60,8 +73,8 @@ public class ClinicManager {
      */
     private void displayProviders() {
         sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
-        for (Provider provider : providerList) {
-            System.out.println(provider);
+        for(int i = 0; i < providerList.size(); i++){
+            System.out.println(providerList.get(i).toString());
         }
     }
 
@@ -187,14 +200,6 @@ public class ClinicManager {
     }
 
 
-    public static void main(String[] args) {
-        // Create an instance of ClinicManager
-        ClinicManager clinicManager = new ClinicManager();
-
-        // The constructor already calls loadProviderList and displayProviders,
-        // so no additional method calls are needed.
-    }
-
     // Method to run the Clinic Manager
     /**
      * Runs the main loop of the Clinic Manager, processing user commands for scheduling,
@@ -273,5 +278,6 @@ public class ClinicManager {
 
 
 
-
 }
+
+

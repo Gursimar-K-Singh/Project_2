@@ -111,10 +111,5 @@ public class sort {
             }
         }
 
-        // Display the sorted providers
-        for (int i = 0; i < list.size(); i++) {
-            Provider provider = list.get(i);
-            System.out.println(provider.getProfile().getFname() + " " + provider.getProfile().getLname());
-        }
     }
 }
