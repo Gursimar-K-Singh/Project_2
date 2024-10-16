@@ -275,7 +275,7 @@ public class ClinicManager {
      * @param timeslotStr The string representation of the timeslot (1 to 12).
      * @return The corresponding Timeslot object, or null if the input is invalid.
      */
-    private Timeslot parseTimeslot(String timeslotStr) {
+    private Timeslot calcTimeslot(String timeslotStr) {
         try {
             int slotNumber = Integer.parseInt(timeslotStr.trim()); // Parse the string as an integer
             if (slotNumber >= 1 && slotNumber <= Timeslot.TIME_SLOTS.length) {
