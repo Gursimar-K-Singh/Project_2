@@ -1,9 +1,6 @@
 package model;
-
-
 import util.Date;
 import util.sort;
-
 import java.util.Scanner;
 import util.List; // Import the new List class
 import util.CircleList;
@@ -19,6 +16,7 @@ public class ClinicManager {
     // Constants for calculating a date within 6 months
     private static final int TOTAL_MONTHS_IN_YEAR = 12;
     private static final int HALF_YEAR_IN_MONTHS = 6;
+    public static final Timeslot[] TIME_SLOTS = generateTimeslots();
 
     public ClinicManager() {
         providerList = new List<>();
@@ -269,6 +267,25 @@ public class ClinicManager {
 
     private static boolean isNumeric(String str) {
         return str != null && str.matches("\\d+");
+    }
+
+    /**
+     * Parses a timeslot from a string representation.
+     *
+     * @param timeslotStr The string representation of the timeslot (1 to 12).
+     * @return The corresponding Timeslot object, or null if the input is invalid.
+     */
+    private Timeslot parseTimeslot(String timeslotStr) {
+        try {
+            int slotNumber = Integer.parseInt(timeslotStr.trim()); // Parse the string as an integer
+            if (slotNumber >= 1 && slotNumber <= Timeslot.TIME_SLOTS.length) {
+                return Timeslot.TIME_SLOTS[slotNumber - 1]; // Convert slot number to zero-based index
+            } else {
+                return null; // Invalid slot number
+            }
+        } catch (NumberFormatException e) {
+            return null; // If the input is not a valid number
+        }
     }
 
 
