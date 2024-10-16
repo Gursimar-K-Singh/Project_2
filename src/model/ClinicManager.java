@@ -63,6 +63,16 @@ public class ClinicManager {
         }
     }
 
+    private Doctor getDocbyNPI(String npi) {
+        for (int i = 0; i < providerList.size(); i++) {
+            Provider provider = providerList.get(i);
+            if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
+                return (Doctor) provider; // Return the found Doctor
+            }
+        }
+        return null; // No doctor found with that NPI
+    }
+
 
 
     /**
@@ -215,7 +225,7 @@ public class ClinicManager {
 
             //Execute the command
             switch (command) {
-                case "D": //scheduleOfficeAppointment(tokens); break;
+                case "D"://scheduleOfficeAppointment(tokens); break;
                 case "T": //scheduleImagingAppointment(tokens); break;
                 case "C": //cancelAppointment(tokens); break;
                 case "R": //rescheduleAppointment(tokens); break;
