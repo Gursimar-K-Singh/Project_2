@@ -63,7 +63,7 @@ public class ClinicManager {
         }
     }
 
-    private Doctor getDocbyNPI(String npi) {
+    private Doctor getDocByNPI(String npi) {
         for (int i = 0; i < providerList.size(); i++) {
             Provider provider = providerList.get(i);
             if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
