@@ -4,7 +4,7 @@ import util.sort;
 
 import java.util.Calendar;
 import java.util.Scanner;
-import util.List; // Import the new List class
+import util.List;
 import util.CircleList;
 
 public class ClinicManager {
@@ -18,10 +18,10 @@ public class ClinicManager {
         appointmentList = new List<>();
         this.technicianList = new CircleList<>();
 
-        loadProviderList(); //load + sort providers + instantiate technician rotation
-        initializeTechnicianRotation(); //load technician rotation circular list (before sorting providers)
-        displayProviders(); //print providers
-        printTechnicianRotation(); //print technician rotation circular list
+        loadProviderList(); //fill the provider list
+        createTechnicianList(); // fill the technician list
+        displayProviderList(); //print providers
+        displayTechnicianList(); //print technician list
     }
 
     /**
@@ -54,7 +54,7 @@ public class ClinicManager {
     /**
      * Prints the list of providers after sorting by profile.
      */
-    private void displayProviders() {
+    private void displayProviderList() {
         sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
         for(int i = 0; i < providerList.size(); i++){
             System.out.println(providerList.get(i).toString());
@@ -138,7 +138,7 @@ public class ClinicManager {
      * Sets up the technician rotation list by including technicians from the providers list
      * in reverse order, beginning with the last technician added.
      */
-    private void initializeTechnicianRotation() {
+    private void createTechnicianList() {
         // Traverse the providers list from the end to the beginning
         for (int index = providerList.size() - 1; index >= 0; index--) {
             Provider currentProvider = providerList.get(index);
@@ -152,7 +152,7 @@ public class ClinicManager {
     /**
      * Displays the current technician rotation list, showing each technician's first and last names along with their locations.
      */
-    private void printTechnicianRotation() {
+    private void displayTechnicianList() {
         System.out.println("\nCurrent technician rotation list:");
         for (int index = 0; index < technicianList.size(); index++) {
             Technician currentTechnician = technicianList.get(index);
@@ -189,17 +189,17 @@ public class ClinicManager {
 
             //Execute the command
             switch (command) {
-                case "D": scheduleOfficeAppointment(tokens); break;
-                case "T": scheduleImagingAppointment(tokens); break;
-                case "R": rescheduleAppointment(tokens); break;
-                case "C": cancelAppointment(tokens); break;
-                case "PO": printOfficeAppointments() ; break;
-                case "PI": printImagingAppointments(); break;
-                case "PA": printAppointmentsByDateTimeProvider(); break;
-                case "PP": printAppointmentsByPatient(); break;
-                case "PL": printAppointmentsByCountyDateTime(); break;
-                case "PS": printBillingStatement();break;
-                case "PC": printProviderCredits(); break;
+                case "D": scheduleWithADoctor(tokens); break;
+                case "T": scheduleWithATech(tokens); break;
+                case "R": reschedule(tokens); break;
+                case "C": cancel(tokens); break;
+                case "PO": printOnlyOfficeAppointments() ; break;
+                case "PI": printOnlyImagingAppointments(); break;
+                case "PA": DateSort(); break;
+                case "PP": patientSort(); break;
+                case "PL": countySort(); break;
+                case "PS": billingStatement();break;
+                case "PC": providerCredits(); break;
                 case "Q":
                 {
                     System.out.println("Clinic Manager is terminated.");
@@ -275,7 +275,7 @@ public class ClinicManager {
      *
      * @param tokens An array of strings representing the command and its parameters.
      */
-    private void rescheduleAppointment(String[] tokens) {
+    private void reschedule(String[] tokens) {
         // Check if the number of arguments is valid for the R command
         if (tokens.length != 7) {
             System.out.println("Missing data tokens.");
@@ -310,15 +310,11 @@ public class ClinicManager {
             System.out.println(patientProfile.toString() + " has an existing appointment at " + appointmentDate + " " + newTimeslot.toString());
             return;
         }
-
-        // Cast Person to Provider for the provider
         Provider provider = (Provider) appointmentToReschedule.getProvider();
-
-        // Create the new appointment with the cast provider
         Appointment newAppointment = new Appointment(appointmentDate, newTimeslot, patient, provider);
 
         // Check if the provider is available for the new timeslot
-        if (!isDoctorAvailable(provider, newAppointment)) {
+        if (!isDocAvailable(provider, newAppointment)) {
             System.out.println(provider.toString() + " is not available at slot " + newTimeslot.getNumericSlot() + ".");
             return;
         }
@@ -336,7 +332,7 @@ public class ClinicManager {
      * @param newAppointment The new appointment to check against existing ones.
      * @return true if the doctor is available, false if they are already booked for the given timeslot.
      */
-    private boolean isDoctorAvailable(Provider provider, Appointment newAppointment) {
+    private boolean isDocAvailable(Provider provider, Appointment newAppointment) {
         // Ensure the provider is a Doctor
         if (!(provider instanceof Doctor)) {
             return false; // Not a doctor, can't check availability
@@ -437,7 +433,7 @@ public class ClinicManager {
      * @param imagingService the string representation of the imaging service
      * @return the corresponding Radiology enum value, or null if the service is invalid
      */
-    private Radiology parseImagingService(String imagingService) {
+    private Radiology convertToImagingService(String imagingService) {
         try {
             return Radiology.valueOf(imagingService.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -450,7 +446,7 @@ public class ClinicManager {
      *
      * @param tokens Array of strings containing appointment details
      */
-    private void cancelAppointment(String[] tokens) {
+    private void cancel(String[] tokens) {
         // Check if the number of arguments is valid for the C command
         if (tokens.length != 6) {
             System.out.println("Missing data tokens.");
@@ -496,7 +492,7 @@ public class ClinicManager {
      *               the imaging appointment, including date, timeslot, patient
      *               information, and imaging service.
      */
-    private void scheduleImagingAppointment(String[] tokens) {
+    private void scheduleWithATech(String[] tokens) {
         // Validate command tokens for T (Imaging appointment)
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("T")) {
             System.out.println("Missing Date tokens");
@@ -528,25 +524,25 @@ public class ClinicManager {
         }
 
         // Parse imaging service (X-ray, ultrasound, or CAT scan)
-        Radiology room = parseImagingService(tokens[6]);
+        Radiology room = convertToImagingService(tokens[6]);
         if (room == null) {
             System.out.println(tokens[6] + " - imaging service not provided.");
             return;
         }
 
         // Find the next available technician
-        Technician assignedTechnician = findTechnician(timeslot, room);
-        if (assignedTechnician == null) {
+        Technician tech = findATech(timeslot, room);
+        if (tech == null) {
             System.out.println("Cannot find an available technician at all locations for " + room.name() + " at slot " + timeslot.getNumericSlot() + ".");
             return;
         }
 
         // Create and book the imaging appointment
-        Imaging imagingAppointment = new Imaging(scheduledDate , timeslot, patient, assignedTechnician, room);
-        appointmentList.add(imagingAppointment);
+        Imaging imaging = new Imaging(scheduledDate, timeslot, patient, tech, room);
+        appointmentList.add(imaging);
 
         // Output the correctly formatted booking information
-        System.out.println(scheduledDate  + " " + timeslot + " " + patient + " " + assignedTechnician + "[" + room + "] booked.");
+        System.out.println(scheduledDate  + " " + timeslot + " " + patient + " " + tech + "[" + room + "] booked.");
     }
 
     /**
@@ -556,13 +552,13 @@ public class ClinicManager {
      * @param room     the imaging service room required for the appointment
      * @return the available Technician, or null if none is found
      */
-    private Technician findTechnician(Timeslot timeslot, Radiology room) {
+    private Technician findATech(Timeslot timeslot, Radiology room) {
         // Loop through the technician list
         for (int i = 0; i < technicianList.size(); i++) {
-            Technician technician = technicianList.getNext(); // Get the next technician in the rotation
+            Technician tech = technicianList.getNext(); // Get the next technician in the rotation
 
-            if (isTechnAvailable(technician, timeslot, room)) {
-                return technician; // Technician is available, return immediately
+            if (isTechnAvailable(tech, timeslot, room)) {
+                return tech; // Technician is available, return immediately
             }
         }
 
@@ -583,7 +579,7 @@ public class ClinicManager {
         // Iterate through all appointments to see if the technician is booked for this timeslot and room
         for (Appointment appointment : appointmentList) {
             if (isTechnicianBooked(technician, appointment, timeslot) ||
-                    isRoomBooked(appointment, room, timeslot, technician.getLocation())) {
+                    isRoomAvailable(appointment, room, timeslot, technician.getLocation())) {
                 return false; // Technician or room is already booked
             }
         }
@@ -613,7 +609,7 @@ public class ClinicManager {
      * @param technicianLocation The location of the technician.
      * @return true if the room is booked; false otherwise.
      */
-    private boolean isRoomBooked(Appointment appointment, Radiology room, Timeslot timeslot, Location technicianLocation) {
+    private boolean isRoomAvailable(Appointment appointment, Radiology room, Timeslot timeslot, Location technicianLocation) {
         return appointment instanceof Imaging &&
                 ((Imaging) appointment).getRoom().equals(room) &&
                 appointment.getTimeslot().equals(timeslot) &&
@@ -633,13 +629,12 @@ public class ClinicManager {
      *               appointment date, timeslot, patient's first name, last name,
      *               date of birth, and imaging service.
      */
-    private void scheduleOfficeAppointment(String[] tokens) {
+    private void scheduleWithADoctor(String[] tokens) {
         // Check for D command
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("D")) {
             System.out.println("Error: Missing or invalid data tokens.");
             return;
         }
-
 
         if (!validateAppointmentDate( tokens[1])) return;
         Date appointmentDate = convertToDate(tokens[1]);
@@ -659,7 +654,7 @@ public class ClinicManager {
 
         // Get the NPI from the command
         String npi = tokens[6].trim();
-        Doctor provider = findDoctorByNPI(npi); // You need to implement this method to find the doctor by NPI
+        Doctor provider = findDoctorThroughNPI(npi); // You need to implement this method to find the doctor by NPI
         if (provider == null) {
             System.out.println(npi + " - provider doesn't exist.");
             return;
@@ -718,7 +713,7 @@ public class ClinicManager {
      * @param nationalProviderIdentifier The National Provider Identifier (NPI) of the doctor to be found.
      * @return The Doctor object if found; otherwise, returns null if no matching doctor exists.
      */
-    private Doctor findDoctorByNPI(String nationalProviderIdentifier) {
+    private Doctor findDoctorThroughNPI(String nationalProviderIdentifier) {
         for (int i = 0; i < providerList.size(); i++) {
             Provider currentProvider = providerList.get(i);
             if (currentProvider instanceof Doctor && ((Doctor) currentProvider).getNpi().equals(nationalProviderIdentifier)) {
@@ -743,7 +738,7 @@ public class ClinicManager {
         }
 
         // Check if the provider is available for the proposed appointment
-        if (!isDoctorAvailable(assignedProvider, proposedAppointment)) {
+        if (!isDocAvailable(assignedProvider, proposedAppointment)) {
             System.out.println(assignedProvider.toString() + " is not available at slot " + proposedAppointment.getTimeslot().getNumericSlot());
             return false; // Provider is not available
         }
@@ -757,7 +752,7 @@ public class ClinicManager {
      * will be displayed. Appointments of type {@link Imaging} will be excluded from
      * the output.
      */
-    private void printOfficeAppointments() {
+    private void printOnlyOfficeAppointments() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -780,7 +775,7 @@ public class ClinicManager {
      * If there are no appointments, a message indicating that the schedule is empty
      * will be displayed.
      */
-    private void printAppointmentsByDateTimeProvider() {
+    private void DateSort() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -804,7 +799,7 @@ public class ClinicManager {
      * complete list of appointments is displayed, followed by a note marking
      * the end of the list.
      */
-    private void printAppointmentsByPatient() {
+    private void patientSort() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -829,7 +824,7 @@ public class ClinicManager {
      * for sorting by county. Once sorted, you'll get a complete list,
      * followed by a note that indicates the end of the list.
      */
-    private void printAppointmentsByCountyDateTime() {
+    private void countySort() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -847,7 +842,7 @@ public class ClinicManager {
     /**
      * Prints the billing statement ordered by patient. If the appointment list is empty, it notifies the user.
      */
-    private void printBillingStatement() {
+    private void billingStatement() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -952,7 +947,7 @@ public class ClinicManager {
      * Prints the expected credit amounts for providers based on the appointments.
      * If the appointment list is empty, it notifies the user.
      */
-    private void printProviderCredits() {
+    private void providerCredits() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
@@ -1077,7 +1072,7 @@ public class ClinicManager {
      * Prints the list of imaging appointments ordered by county/date/time.
      * If the appointment list is empty, it notifies the user.
      */
-    private void printImagingAppointments() {
+    private void printOnlyImagingAppointments() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
