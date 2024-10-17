@@ -1,11 +1,14 @@
 package model;
 /**
- *   * Represents a specific time of day in 24-hour format, offering comparison methods, string conversion (e.g., "9:30 AM"), predefined static instances for common appointment times, and implements the Comparable interface for chronological ordering.
- *
+ * Represents a specific time during the day, with each timeslot lasting 30 minutes.
+ * This class provides methods for comparing timeslots, retrieving their numeric representation,
+ * and converting them to a readable string format (e.g., "9:00 AM").
+ *  It includes predefined static instances for all available appointment times.
  * @author GursimarSingh
  */
  public class Timeslot implements Comparable<Timeslot> {
-
+    //  array used store all time slots
+    public static final Timeslot[] SLOTS = TimeslotArray();
     //constant
     private static final int SESSION_LENGTH = 30;// each session is 30 minute long
     private static final int NUMBER_OF_SESSION_FOR_SLOT = 6; // Both morning and afternoon have a total of 6 sessions
@@ -15,9 +18,6 @@ package model;
     // Instance variables
     private final int hour;
     private final int minute;
-
-    //  array used store all time slots
-    public static final Timeslot[] TIME_SLOTS = TimeslotArray();
 
     /**
      * set minute and hour of timeslot object
@@ -99,8 +99,8 @@ package model;
      * @return the numeric value of the timeslot (ranging from 1 to 12)
      */
     public int getSlot() {
-        for (int i = 0; i < TIME_SLOTS.length; i++) {
-            if (this.equals(TIME_SLOTS[i])) {
+        for (int i = 0; i < SLOTS.length; i++) {
+            if (this.equals(SLOTS[i])) {
                 return i + 1;
             }
         }
@@ -116,7 +116,7 @@ package model;
      * @return an array containing Timeslot objects
      */
     private static Timeslot[] TimeslotArray() {
-        Timeslot[] timeslots = new Timeslot[NUMBER_OF_SESSION_FOR_SLOT * 2]; // Total of 12 slots (6 morning + 6 afternoon)
+        Timeslot[] timeslots = new Timeslot[NUMBER_OF_SESSION_FOR_SLOT * 2]; // contains all possible timeslots
 
         int hour = STARTING_APPOINTMENT_HOUR_MORNING;
         int minute = 0;

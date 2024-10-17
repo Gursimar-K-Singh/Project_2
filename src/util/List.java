@@ -100,6 +100,20 @@ public class List<E> implements Iterable<E>{
     }
 
     /**
+     * Sets the element at the specified index to the given value.
+     *
+     * @param index The index of the element to set.
+     * @param e     The new element to be set at the specified index.
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size).
+     */
+    public void set(int index, E e) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        objects[index] = e; // Set the new element at the specified index
+    }
+
+    /**
      * Checks if the list is empty.
      *
      * @return true if the list is empty, false if not
