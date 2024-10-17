@@ -209,7 +209,7 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
-    public boolean isWeekend() {
+    public boolean Weekend() {
         Calendar cal = Calendar.getInstance();
         cal.set(this.year, this.month, this.day);
 
@@ -217,7 +217,7 @@ public class Date implements Comparable<Date> {
         return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
     }
 
-    public boolean isWithinSixMonths() {
+    public boolean WithinSixMonths() {
         Calendar today = Calendar.getInstance(); // Get the current date
         Calendar sixMonthsLater = Calendar.getInstance(); // Create a calendar for six months later
         sixMonthsLater.add(Calendar.MONTH, 6); // Move the calendar 6 months ahead

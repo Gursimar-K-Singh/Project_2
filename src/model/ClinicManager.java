@@ -33,7 +33,7 @@ public class ClinicManager {
     private CircleList<Technician> technicianList;
 
     /**
-     * The constructor makes a provider and app
+     * The constructor makes a provider, appointment, and technician list
      * Loads and displays the provider and technician lists.
      */
     public ClinicManager() {
@@ -75,16 +75,6 @@ public class ClinicManager {
     }
 
 
-    /**
-     * Displays the list of providers sorted in ascending order.
-     * Each provider's details are printed to the console.
-     */
-    private void displayProviderList() {
-        sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
-        for(int i = 0; i < providerList.size(); i++){
-            System.out.println(providerList.get(i).toString());
-        }
-    }
 
     /**
      * Creates a list of technicians from the provider list,
@@ -116,6 +106,17 @@ public class ClinicManager {
             }
         }
         System.out.println(); // Move to the next line after printing the rotation
+    }
+
+    /**
+     * Displays all providers sorted by last name then first name
+     * Each provider's details are printed to the console.
+     */
+    private void displayProviderList() {
+        sort.provider(providerList);
+        for(int i = 0; i < providerList.size(); i++){
+            System.out.println(providerList.get(i).toString());
+        }
     }
 
     /**
@@ -254,6 +255,43 @@ public class ClinicManager {
     }
 
     /**
+     * Validates the provided date of birth (DOB).
+     *
+     * Checks if the DOB is:
+     * - A valid date.
+     * - Not today's date.
+     * - Not a future date.
+     *
+     * @param dobStr the date of birth as a string.
+     * @return {@code true} if valid; {@code false} otherwise.
+     */
+    private static boolean checkDOB(String dobStr) {
+        Date dob = convertToDate(dobStr);
+
+        // Check if the date is null, meaning it couldn't be parsed correctly
+        if (dob == null || !dob.isValid()) {
+            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date");
+            return false; // Invalid date
+        }
+
+        // Check if the DOB is today
+        if (dob.isToday()) {
+            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
+            return false;
+        }
+
+        // Check if the DOB is in the future
+        Calendar today = Calendar.getInstance();
+        Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
+        if (dob.compareTo(todayDate) > 0) {
+            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
+            return false;
+        }
+
+        return true; // DOB is valid
+    }
+
+    /**
      * checks if appointment is valid based on these criteria
      * - A valid calendar date.
      * - Not today or in the past.
@@ -276,12 +314,12 @@ public class ClinicManager {
             return false;
         }
 
-        if (appointmentDate.isWeekend()) {
+        if (appointmentDate.Weekend()) {
             System.out.println("Appointment date: " + dateStr + " is Saturday or Sunday.");
             return false;
         }
 
-        if (!(appointmentDate.isWithinSixMonths())) {
+        if (!(appointmentDate.WithinSixMonths())) {
             System.out.println("Appointment date: " + dateStr + " is not within six months.");
             return false;
         }
@@ -343,7 +381,7 @@ public class ClinicManager {
         Timeslot newTimeslot = convertToTimeslot(tokens[6]);
 
         // rescheduling appointment
-        attemptReschedule(appointmentDate, oldTimeslot, patientProfile, newTimeslot);
+        tryToReschedule(appointmentDate, oldTimeslot, patientProfile, newTimeslot);
     }
     /**
      * Checks if the provided token array has exactly 7 elements.
@@ -362,7 +400,7 @@ public class ClinicManager {
     }
 
     /**
-     * Attempts to reschedule an existing appointment based on the provided details.
+     * tries to reschedule an existing appointment based on the provided details.
      * Validates the appointment's existence, checks for conflicts, and ensures provider availability
      * before replacing the old appointment with a new one.
      *
@@ -371,7 +409,7 @@ public class ClinicManager {
      * @param patientProfile the profile of the patient associated with the appointment
      * @param newTimeslot the desired new timeslot for the appointment
      */
-    private void attemptReschedule(Date appointmentDate, Timeslot oldTimeslot, Profile patientProfile, Timeslot newTimeslot) {
+    private void tryToReschedule(Date appointmentDate, Timeslot oldTimeslot, Profile patientProfile, Timeslot newTimeslot) {
         // Find the appointment to reschedule
         Appointment rescheduleAppointment = FindAppointment(appointmentDate, oldTimeslot, patientProfile);
 
@@ -387,6 +425,7 @@ public class ClinicManager {
         }
 
         Patient patient = (Patient) rescheduleAppointment.getPatient();
+        Provider provider = (Provider) rescheduleAppointment.getProvider();
 
         // Checking for conflicts
         if (checkIfAppointmentExists(patient, appointmentDate, newTimeslot)) {
@@ -394,19 +433,21 @@ public class ClinicManager {
             return;
         }
 
-        Provider provider = (Provider) rescheduleAppointment.getProvider();
+        //    // Check the provider's availability for the new timeslot
         Appointment newAppointment = new Appointment(appointmentDate, newTimeslot, patient, provider);
-
-        // checking provider avaliability
         if (!isDocAvailable(provider, newAppointment)) {
             System.out.println(provider.toString() + " is not available at slot " + newTimeslot.getSlot() + ".");
             return;
         }
 
         // replace old with new
-        appointmentList.remove(rescheduleAppointment);
-        appointmentList.add(newAppointment);
+        updateAppointment(rescheduleAppointment, newAppointment);
         System.out.println("Rescheduled to " + newAppointment.toString());
+    }
+
+    private void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
+        appointmentList.remove(oldAppointment);
+        appointmentList.add(newAppointment);
     }
 
     /**
@@ -781,7 +822,7 @@ public class ClinicManager {
 
         // Get the NPI from the command
         String npi = tokens[6].trim();
-        Doctor provider = findDoctorThroughNPI(npi); // You need to implement this method to find the doctor by NPI
+        Doctor provider = findDoctorThroughNPI(npi);
         if (provider == null) {
             System.out.println(npi + " - provider doesn't exist.");
             return;
@@ -796,42 +837,6 @@ public class ClinicManager {
         System.out.println(newAppointment.toString() + " booked.");
     }
 
-    /**
-     * Validates the provided date of birth (DOB).
-     *
-     * Checks if the DOB is:
-     * - A valid date.
-     * - Not today's date.
-     * - Not a future date.
-     *
-     * @param dobStr the date of birth as a string.
-     * @return {@code true} if valid; {@code false} otherwise.
-     */
-    private static boolean checkDOB(String dobStr) {
-        Date dob = convertToDate(dobStr);
-
-        // Check if the date is null, meaning it couldn't be parsed correctly
-        if (dob == null || !dob.isValid()) {
-            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date");
-            return false; // Invalid date
-        }
-
-        // Check if the DOB is today
-        if (dob.isToday()) {
-            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
-            return false;
-        }
-
-        // Check if the DOB is in the future
-        Calendar today = Calendar.getInstance();
-        Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
-        if (dob.compareTo(todayDate) > 0) {
-            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
-            return false;
-        }
-
-        return true; // DOB is valid
-    }
 
     /**
      * Finds a doctor through their NPI.
@@ -1067,7 +1072,6 @@ public class ClinicManager {
 
             // If not printed yet, calculate and print the billing statement
             if (!alreadyPrinted) {
-                // Create a new Patient object for this patient (optional, depends on your logic)
                 Patient currentPatient = new Patient(patient.getProfile());
                 addPatientVisits(currentPatient, patient, i);
 
@@ -1208,5 +1212,3 @@ public class ClinicManager {
     }
 
 }
-
-
