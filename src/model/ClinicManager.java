@@ -540,12 +540,10 @@ public class ClinicManager {
         Profile patientProfile = new Profile(tokens[3].trim(), tokens[4].trim(), convertToDate(tokens[5].trim()));
         Appointment cancelAppointment = FindAppointment(schuduledDate, timeslot, patientProfile);
 
-        // Attempt to find and cancel the appointment
         if (cancelAppointment != null) { // If found
             appointmentList.remove(cancelAppointment); // Remove the appointment
             System.out.println(schuduledDate + " " + timeslot + " " +patientProfile.toString() + " - appointment has been canceled.");
         } else {
-            // If not found, notify the user
             System.out.println(schuduledDate + " " + timeslot + " " +patientProfile.toString() + " - appointment does not exist.");
         }
     }
