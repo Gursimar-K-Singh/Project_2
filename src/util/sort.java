@@ -69,7 +69,7 @@ public class sort {
                 comparison = ((Provider) current.getProvider()).getLocation().getCounty().compareTo(
                         ((Provider) smallest.getProvider()).getLocation().getCounty());
                 if (comparison == 0) {
-                    comparison = compareDateAndTime(current, smallest); // Use the new method
+                    comparison = compareDateAndTime(current, smallest);
                 }
                 break;
         }
@@ -86,6 +86,7 @@ public class sort {
     }
 
     public static void provider(List<Provider> list) {
+        List<Appointment> sortedList = new List<>();
 
         for (int i = 0; i < list.size() -1; i++) {
             for (int j = 0; j < list.size() - i - 1; j++) {
