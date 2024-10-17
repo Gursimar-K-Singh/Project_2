@@ -86,9 +86,9 @@ public class sort {
     }
 
     public static void provider(List<Provider> list) {
-        int n = list.size();
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
+
+        for (int i = 0; i < list.size() -1; i++) {
+            for (int j = 0; j < list.size() - i - 1; j++) {
                 Provider current = list.get(j);
                 Provider next = list.get(j + 1);
 
