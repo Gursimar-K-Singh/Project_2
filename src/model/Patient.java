@@ -81,17 +81,27 @@ public class Patient extends Person {
      * @return The total charge for all visits.
      */
 
-    /**
+
     public int charge() {
         int total = 0;
-        Visit current = visits;//first visit - traversing start point
-        while (current != null){
-            total += current.getAppointment().getProvider().getSpecialty().getCharge();
-            current = current.getNext();
+        Visit current = visits; // Start traversing from the first visit
+
+        while (current != null) {
+            Provider provider = (Provider) current.getAppointment().getProvider();
+
+            // Check the type of provider and calculate the charge based on it
+            if (provider instanceof Doctor doctor) {
+                total += doctor.rate(); // Get the charge based on the specialty of the doctor
+            } else if (provider instanceof Technician technician) {
+                total += technician.rate(); // Get the charge based on the technician's rate per visit
+            }
+
+            current = current.getNext(); // Move to the next visit
         }
+
         return total;
     }
-     */
+
 
     /**
      * Returns a string representation of the patient, using the profile's toString method.

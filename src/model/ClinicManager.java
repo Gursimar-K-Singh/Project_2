@@ -58,16 +58,11 @@ public class ClinicManager {
     }
 
 
-
-    public static void main(String[] args){
-        new ClinicManager();
-    }
-
     /**
      * Prints the list of providers after sorting by profile.
      */
     private void displayProviders() {
-        //sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
+        sort.provider(providerList); // Assumes providerList has been renamed as suggested earlier
         for(int i = 0; i < providerList.size(); i++){
             System.out.println(providerList.get(i).toString());
         }
@@ -851,9 +846,73 @@ public class ClinicManager {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
-        } else {
-
         }
+
+        System.out.println("\n** Billing statement ordered by patient **");
+
+        // Sort the appointmentList by patient (using the key 'P' for patient sorting)
+        sort.appointment(appointmentList, 'P');
+
+        // Array to track printed patients
+        String[] printedNames = new String[appointmentList.size()];
+        int printedCount = 0;
+
+        // Iterate through the sorted appointmentList
+        for (int i = 0; i < appointmentList.size(); i++) {
+            Appointment appointment = appointmentList.get(i);
+            Patient patient = (Patient) appointment.getPatient();
+
+            // Ensure patient and profile are not null
+            if (patient == null || patient.getProfile() == null) {
+                continue; // Skip if patient or profile is not available
+            }
+
+            String fullName = patient.getProfile().getFname() + " " + patient.getProfile().getLname();
+            String dob = patient.getProfile().getDob().toString(); // Format this as necessary
+
+            // Create a unique identifier for the patient using their full name and DOB
+            String uniqueIdentifier = fullName + " " + dob;
+
+            // Check if this unique identifier has already been printed
+            boolean alreadyPrinted = false;
+            for (int j = 0; j < printedCount; j++) {
+                if (printedNames[j].equals(uniqueIdentifier)) {
+                    alreadyPrinted = true;
+                    break;
+                }
+            }
+
+            // If not printed yet, calculate and print the billing statement
+            if (!alreadyPrinted) {
+                // Create a new Patient object for this patient (optional, depends on your logic)
+                Patient currentPatient = new Patient(patient.getProfile());
+
+                // Add all visits associated with this patient
+                for (int k = i; k < appointmentList.size(); k++) {
+                    Appointment visitAppointment = appointmentList.get(k);
+                    if (visitAppointment.getPatient().equals(patient)) {
+                        Visit visit = new Visit(visitAppointment);
+                        currentPatient.addVisit(visit); // Assuming getVisit() returns the Visit object
+                    } else {
+                        break; // Stop when reaching a different patient
+                    }
+                }
+
+                // Calculate the total charges for this patient
+                int totalCharge = currentPatient.charge(); // Calculate the total charges from visits
+
+                // Print the billing statement for the patient
+                System.out.printf("(%d) %s %s [amount due: $%d.00]%n",
+                        printedCount + 1, fullName, dob, totalCharge);
+
+                // Add to the array to avoid duplicates
+                printedNames[printedCount++] = uniqueIdentifier;
+            }
+        }
+
+
+
+        System.out.println("** end of list **");
     }
 
     private void printProviderCredits() {
