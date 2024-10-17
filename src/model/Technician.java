@@ -39,6 +39,6 @@ public class Technician extends Provider {
      */
     @Override
     public String toString() {
-        return super.toString() + "[rate: $" + (int)ratePerVisit+ "]";
+        return super.toString() + "[rate: $" + ratePerVisit+ "]";
     }
 }
