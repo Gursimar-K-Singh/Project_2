@@ -104,7 +104,6 @@ public class List<E> implements Iterable<E>{
      *
      * @param index The index of the element to set.
      * @param e     The new element to be set at the specified index.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size).
      */
     public void set(int index, E e) {
         if (index < 0 || index >= size) {
