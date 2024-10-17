@@ -86,35 +86,39 @@ public class sort {
     }
 
     public static void provider(List<Provider> list) {
-        List<Appointment> sortedList = new List<>();
+        List<Provider> sortedList = new List<>();
 
-        for (int i = 0; i < list.size() -1; i++) {
-            for (int j = 0; j < list.size() - i - 1; j++) {
-                Provider current = list.get(j);
-                Provider next = list.get(j + 1);
+        while (!list.isEmpty()) {
+            Provider smallest = list.get(0);
 
-                // Get last names and first names
-                String currentLastName = current.getProfile().getLname();
-                String nextLastName = next.getProfile().getLname();
-                String currentFirstName = current.getProfile().getFname();
-                String nextFirstName = next.getProfile().getFname();
+            for (int i = 1; i < list.size(); i++) {
+                Provider current = list.get(i);
 
                 // Compare last names
-                if (currentLastName.compareTo(nextLastName) > 0) {
-                    // Swap if current's last name is greater than next's last name
-                    list.add(next); // Add next to the end of the list
-                    list.remove(current); // Remove current from its position
-                } else if (currentLastName.equals(nextLastName)) {
-                    // If last names are equal, compare first names
-                    if (currentFirstName.compareTo(nextFirstName) > 0) {
-                        // Swap if current's first name is greater than next's first name
-                        list.add(next);
-                        list.remove(current);
+                int lastNameComparison = current.getProfile().getLname().compareTo(smallest.getProfile().getLname());
+
+                if (lastNameComparison < 0) {
+                    smallest = current;
+                } else if (lastNameComparison == 0) {
+                    // Compare first names if last names are equal
+                    int firstNameComparison = current.getProfile().getFname().compareTo(smallest.getProfile().getFname());
+
+                    if (firstNameComparison < 0) {
+                        smallest = current;
                     }
                 }
             }
+
+            list.remove(smallest); // Remove the smallest provider from the original list
+            sortedList.add(smallest); // Add it to the sorted list
         }
 
+        // Transfer sorted elements back to the original list
+        while (!sortedList.isEmpty()) {
+            Provider provider = sortedList.get(0);
+            sortedList.remove(provider);
+            list.add(provider);
+        }
     }
 
 
