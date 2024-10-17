@@ -33,13 +33,13 @@ public class ClinicManager {
     private CircleList<Technician> technicianList;
 
     /**
-     * Constructs a ClinicManager instance, initializing provider and appointment lists.
+     * The constructor makes a provider and app
      * Loads and displays the provider and technician lists.
      */
     public ClinicManager() {
+        this.technicianList = new CircleList<>();
         providerList = new List<>();
         appointmentList = new List<>();
-        this.technicianList = new CircleList<>();
 
         loadProviderList(); //fill the provider list
         createTechnicianList(); // fill the technician list
@@ -373,20 +373,20 @@ public class ClinicManager {
      */
     private void attemptReschedule(Date appointmentDate, Timeslot oldTimeslot, Profile patientProfile, Timeslot newTimeslot) {
         // Find the appointment to reschedule
-        Appointment appointmentToReschedule = FindAppointment(appointmentDate, oldTimeslot, patientProfile);
+        Appointment rescheduleAppointment = FindAppointment(appointmentDate, oldTimeslot, patientProfile);
 
-        if (appointmentToReschedule == null) {
+        if (rescheduleAppointment == null) {
             System.out.println(appointmentDate + " " + oldTimeslot + " " + patientProfile.getFname() + " " + patientProfile.getLname() + " " + patientProfile.getDob() + " does not exist.");
             return;
         }
 
         // Check if appointment is an imaging appointment
-        if (appointmentToReschedule instanceof Imaging) {
+        if (rescheduleAppointment instanceof Imaging) {
             System.out.println("Imaging appointments cannot be rescheduled.");
             return;
         }
 
-        Patient patient = (Patient) appointmentToReschedule.getPatient();
+        Patient patient = (Patient) rescheduleAppointment.getPatient();
 
         // Checking for conflicts
         if (checkIfAppointmentExists(patient, appointmentDate, newTimeslot)) {
@@ -394,7 +394,7 @@ public class ClinicManager {
             return;
         }
 
-        Provider provider = (Provider) appointmentToReschedule.getProvider();
+        Provider provider = (Provider) rescheduleAppointment.getProvider();
         Appointment newAppointment = new Appointment(appointmentDate, newTimeslot, patient, provider);
 
         // checking provider avaliability
@@ -404,7 +404,7 @@ public class ClinicManager {
         }
 
         // replace old with new
-        appointmentList.remove(appointmentToReschedule);
+        appointmentList.remove(rescheduleAppointment);
         appointmentList.add(newAppointment);
         System.out.println("Rescheduled to " + newAppointment.toString());
     }
@@ -530,36 +530,23 @@ public class ClinicManager {
      * @param tokens Array of strings containing appointment details
      */
     private void cancel(String[] tokens) {
-        // check if tokens length is correct
         if (tokens.length != 6) {
             System.out.println("Missing data tokens.");
             return;
         }
 
-        // change strings to correct data types
-        Date appointmentDate = convertToDate(tokens[1]);
+        Date schuduledDate = convertToDate(tokens[1]);
         Timeslot timeslot = convertToTimeslot(tokens[2]);
         Profile patientProfile = new Profile(tokens[3].trim(), tokens[4].trim(), convertToDate(tokens[5].trim()));
+        Appointment cancelAppointment = FindAppointment(schuduledDate, timeslot, patientProfile);
 
-        // Finds appointment to cancel
-        Appointment appointmentToCancel = FindAppointment(appointmentDate, timeslot, patientProfile);
-
-        // creates strings for output
-        String formattedDate = appointmentDate.toString();
-        String formattedTime = timeslot.toString();
-        String formattedName = patientProfile.getFname() + " " + patientProfile.getLname();
-        String formattedDob = patientProfile.getDob().toString();
-
-        // create output
-        String output = formattedDate + " " + formattedTime + " " + formattedName + " " + formattedDob;
-
-        // attempt to find and cancel the appointment
-        if (appointmentToCancel != null) { // If found
-            appointmentList.remove(appointmentToCancel); // Remove the appointment
-            System.out.println(output + " - appointment has been canceled.");
+        // Attempt to find and cancel the appointment
+        if (cancelAppointment != null) { // If found
+            appointmentList.remove(cancelAppointment); // Remove the appointment
+            System.out.println(schuduledDate + " " + timeslot + " " +patientProfile.toString() + " - appointment has been canceled.");
         } else {
             // If not found, notify the user
-            System.out.println(output + " - appointment does not exist.");
+            System.out.println(schuduledDate + " " + timeslot + " " +patientProfile.toString() + " - appointment does not exist.");
         }
     }
 

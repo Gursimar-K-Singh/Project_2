@@ -33,15 +33,6 @@ public enum Radiology {
      * @return the name of the imaging service.
      */    @Override
     public String toString() {
-        switch (serviceName.toLowerCase()) {
-            case "x-ray":
-                return "XRAY";
-            case "ct scan":
-                return "CATSCAN";
-            case "ultrasound":
-                return "ULTRASOUND";
-            default:
-                return serviceName.toUpperCase(); // Fallback to return the service name in uppercase if not matched
-        }
+        return serviceName;
     }
 }
