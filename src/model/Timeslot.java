@@ -1,12 +1,6 @@
 package model;
 /**
- * The Timeslot class represents a specific time during the day, identified by
- * the hour and minute in 24-hour format. It provides methods for comparing timeslots
- * and converting the timeslot to a readable string format (e.g., "9:30 AM").
- * This class also provides several predefined static instances representing
- * common appointment times.
- * It implements the Comparable interface, allowing timeslots to be compared based on
- * chronological order (hours and minutes).
+ *   * Represents a specific time of day in 24-hour format, offering comparison methods, string conversion (e.g., "9:30 AM"), predefined static instances for common appointment times, and implements the Comparable interface for chronological ordering.
  *
  * @author GursimarSingh
  */
