@@ -41,7 +41,7 @@ public enum Location {
      */
     @Override
     public String toString() {
-        return name() + ","+county + " " + zip;
+        return name() + ", "+county + " " + zip;
     }
 
     /**
@@ -53,14 +53,6 @@ public enum Location {
         return county;
     }
 
-    /**
-     * Returns the zip code of the location.
-     *
-     * @return The zip code as a String.
-     */
-    public String getZip(){
-        return zip;
-    }
 
 
 }

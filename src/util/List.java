@@ -102,7 +102,7 @@ public class List<E> implements Iterable<E>{
     /**
      * Checks if the list is empty.
      *
-     * @return true if the list is empty, false otherwise.
+     * @return true if the list is empty, false if not
      */
     public boolean isEmpty() {
         return size == 0;
@@ -171,7 +171,4 @@ public class List<E> implements Iterable<E>{
             return objects[currentIndex++];
         }
     }
-
-
-
 }

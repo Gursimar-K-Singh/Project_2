@@ -40,6 +40,10 @@ public abstract class Provider extends Person {
         return getProfile().getFname() + " " + getProfile().getLname(); // Assuming the profile contains first and last name
     }
 
+    public String getDob() {
+        return getProfile().getDob().toString(); // Assuming the profile contains first and last name
+    }
+
 
     /**
      * Returns the location of the provider.
@@ -64,7 +68,7 @@ public abstract class Provider extends Person {
      */
     @Override
     public String toString() {
-        return "[" + getName() + ", " + location + "]";
+        return "[" + getName() + " " + getDob() + ", "+ location + "]";
     }
 
 

@@ -140,44 +140,4 @@ package model;
         return -1;  // Invalid slot
     }
 
-    //delete
-    public static void main(String[] args) {
-        // Print all timeslots
-        System.out.println("All available timeslots:");
-        for (Timeslot slot : Timeslot.TIME_SLOTS) {
-            System.out.println(slot);
-        }
-
-        // Create a few Timeslot instances
-        Timeslot morningSlot1 = new Timeslot(9, 0);   // 9:00 AM
-        Timeslot morningSlot2 = new Timeslot(9, 30);   // 9:30 AM
-        Timeslot afternoonSlot1 = new Timeslot(14, 0); // 2:00 PM
-        Timeslot afternoonSlot2 = new Timeslot(14, 30); // 2:30 PM
-        Timeslot afternoonSlot3 = new Timeslot(14, 30); // 2:30 PM (for equality test)
-
-        // Print the timeslot string representations
-        System.out.println("\nIndividual Timeslots:");
-        System.out.println("Timeslot 1: " + morningSlot1);
-        System.out.println("Timeslot 2: " + morningSlot2);
-        System.out.println("Timeslot 3: " + afternoonSlot1);
-        System.out.println("Timeslot 4: " + afternoonSlot2);
-
-        // Compare the timeslots
-        System.out.println("\nComparing Timeslots:");
-        System.out.println("Comparing Timeslot 1 and Timeslot 2: " + morningSlot1.compareTo(morningSlot2));
-        System.out.println("Comparing Timeslot 3 and Timeslot 4: " + afternoonSlot1.compareTo(afternoonSlot2));
-        System.out.println("Comparing Timeslot 2 and Timeslot 1: " + morningSlot2.compareTo(morningSlot1));
-
-        // Check equality of timeslots
-        System.out.println("\nEquality Checks:");
-        System.out.println("Timeslot 2 equals Timeslot 1: " + morningSlot2.equals(morningSlot1));
-        System.out.println("Timeslot 2 equals Timeslot 3: " + morningSlot2.equals(afternoonSlot1));
-        System.out.println("Timeslot 2 equals Timeslot 4: " + afternoonSlot2.equals(afternoonSlot3));
-
-        // Get numeric slots
-        System.out.println("\nNumeric Slot Values:");
-        System.out.println("Numeric value of Timeslot 1 (9:00 AM): " + morningSlot1.getNumericSlot());
-        System.out.println("Numeric value of Timeslot 4 (2:30 PM): " + afternoonSlot2.getNumericSlot());
-    }
-
 }

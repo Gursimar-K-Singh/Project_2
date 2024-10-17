@@ -28,7 +28,7 @@ public class ClinicManager {
      * Reads provider details from the "providers.txt" file and adds each provider
      * to the providerList. Displays an error message if the file cannot be found.
      */
-    public void loadProviderList() {
+    private void loadProviderList() {
         try {
             // Load the file from the package using getResourceAsStream
             Scanner fileScanner = new Scanner(getClass().getResourceAsStream("providers.txt"));
@@ -107,7 +107,7 @@ public class ClinicManager {
      * @param locationString The string representation of the location.
      * @return The matching Location enum, or throws an exception if invalid.
      */
-    public Location convertToLocation(String locationString) {
+    private Location convertToLocation(String locationString) {
         for (Location loc : Location.values()) {
             if (loc.name().equalsIgnoreCase(locationString)) {
                 return loc;
@@ -153,7 +153,7 @@ public class ClinicManager {
      * Displays the current technician rotation list, showing each technician's first and last names along with their locations.
      */
     private void displayTechnicianList() {
-        System.out.println("\nCurrent technician rotation list:");
+        System.out.println("\nRotation list for the technicians.\n:");
         for (int index = 0; index < technicianList.size(); index++) {
             Technician currentTechnician = technicianList.get(index);
             System.out.print(currentTechnician.getProfile().getFname() + " " + currentTechnician.getProfile().getLname() +
@@ -202,7 +202,7 @@ public class ClinicManager {
                 case "PC": providerCredits(); break;
                 case "Q":
                 {
-                    System.out.println("Clinic Manager is terminated.");
+                    System.out.println("Clinic Manager terminated.\n");
                     scanner.close();
                     return;
                 }
@@ -228,7 +228,7 @@ public class ClinicManager {
         Date appointmentDate = convertToDate(dateStr);
 
         if (!appointmentDate.isValid()) {
-            System.out.println("Appointment date: " + dateStr + " is not a valid calendar date.");
+            System.out.println("Appointment date: " + dateStr + " is not a valid calendar date");
             return false;
         }
 
@@ -243,7 +243,7 @@ public class ClinicManager {
         }
 
         if (!(appointmentDate.isWithinSixMonths())) {
-            System.out.println("Appointment date: " + dateStr + " is not six months within.");
+            System.out.println("Appointment date: " + dateStr + " is not within six months.");
             return false;
         }
 
@@ -495,7 +495,7 @@ public class ClinicManager {
     private void scheduleWithATech(String[] tokens) {
         // Validate command tokens for T (Imaging appointment)
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("T")) {
-            System.out.println("Missing Date tokens");
+            System.out.println("Missing data tokens");
             return;
         }
 
@@ -632,7 +632,7 @@ public class ClinicManager {
     private void scheduleWithADoctor(String[] tokens) {
         // Check for D command
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("D")) {
-            System.out.println("Error: Missing or invalid data tokens.");
+            System.out.println("Missing data tokens.");
             return;
         }
 
@@ -685,7 +685,7 @@ public class ClinicManager {
 
         // Check if the date is null, meaning it couldn't be parsed correctly
         if (dob == null || !dob.isValid()) {
-            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date.");
+            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date");
             return false; // Invalid date
         }
 
@@ -848,7 +848,7 @@ public class ClinicManager {
             return; // Exit the method early if there are no appointments
         }
 
-        System.out.println("\n** Billing statement ordered by patient **");
+        System.out.println("\n** Billing statement ordered by patient. **");
 
         // Sort the appointmentList by patient (using the key 'P' for patient sorting)
         sort.appointment(appointmentList, 'P');
@@ -934,7 +934,7 @@ public class ClinicManager {
                 int totalCharge = currentPatient.charge(); // Calculate the total charges from visits
 
                 // Print the billing statement for the patient
-                System.out.printf("(%d) %s %s [amount due: $%d.00]%n",
+                System.out.printf("(%d) %s %s [due: $%d.00]%n",
                         printedCount + 1, fullName, dob, totalCharge);
 
                 // Add to the array to avoid duplicates
@@ -953,9 +953,7 @@ public class ClinicManager {
             return; // Exit the method early if there are no appointments
         }
 
-        System.out.println("\n** Expected Credit Amounts for Providers **");
-
-        // Extract and sort unique providers
+        System.out.println("\n** Credit amount ordered by provider. **");
         List<Provider> uniqueProviders = getUniqueProviders();
 
         // Track printed providers
@@ -1060,11 +1058,11 @@ public class ClinicManager {
      */
     private void printProviderCredit(Provider provider, int totalCharge) {
         if (provider instanceof Doctor doctor) {
-            System.out.printf("%s [Specialty: %s] [Expected credit: $%d.00]%n",
-                    doctor.getName(), doctor.getSpecialty(), totalCharge);
+            System.out.printf("%s %s [credit amount: $%d.00]%n",
+                    doctor.getName(), doctor.getDob(), totalCharge);
         } else if (provider instanceof Technician technician) {
-            System.out.printf("%s [Rate per Visit: $%d] [Expected credit: $%d.00]%n",
-                    technician.getName(), technician.rate(), totalCharge);
+            System.out.printf("%s %s [credit amount: $%d.00]%n",
+                    technician.getName(), technician.getDob(), totalCharge);
         }
     }
 

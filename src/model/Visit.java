@@ -19,17 +19,9 @@ public class Visit {
         this.next = null;
     }
 
-    public Visit(Appointment appointment, Visit next){
-        this.appointment = appointment;
-        this.next = next;
-    }
 
     public Appointment getAppointment() {
         return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
     }
 
     public Visit getNext() {

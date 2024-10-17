@@ -24,10 +24,6 @@ public enum Specialty {
         this.charge = charge;
     }
 
-    public int getCharge() {
-        return charge;
-    }
-
     public String toString() {
         return name();
     }

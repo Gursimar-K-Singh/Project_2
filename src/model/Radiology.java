@@ -26,14 +26,6 @@ public enum Radiology {
         this.serviceName = serviceName;
     }
 
-    /**
-     * Retrieves the name of the imaging service.
-     *
-     * @return the name of the imaging service.
-     */
-    public String getServiceName() {
-        return serviceName;
-    }
 
     /**
      * Returns a string representation of the imaging service.
