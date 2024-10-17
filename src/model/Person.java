@@ -1,4 +1,18 @@
 package model;
+/**
+ * Represents a person with a profile.
+ *
+ * The Person class allows for comparing and checking equality between
+ * different Person objects based on their profiles.
+ *
+ * Each Person is defined by a Profile containing relevant information.
+ * This class provides methods to get the profile, check if two
+ * Persons are equal, and compare them.
+ *
+ * Equality and comparison are based on the Profile's content.
+ *
+ * @author Gursimar Singh
+ */
 
 public class Person implements Comparable<Person> {
     protected Profile profile;
@@ -51,8 +65,6 @@ public class Person implements Comparable<Person> {
     public int compareTo(Person otherPerson) {
         return this.profile.compareTo(otherPerson.profile);
     }
-
-
 
     /**
      * Returns a string representation of the Person.

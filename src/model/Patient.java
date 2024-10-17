@@ -80,8 +80,6 @@ public class Patient extends Person {
      *
      * @return The total charge for all visits.
      */
-
-
     public int charge() {
         int total = 0;
         Visit current = visits; // Start traversing from the first visit

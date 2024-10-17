@@ -1,6 +1,14 @@
 package model;
 import util.Date;
-
+/**
+ * Represents an imaging appointment, extending the Appointment class.
+ *
+ * This class is used for scheduling imaging procedures such as X-rays,
+ * ultrasounds, or CAT scans. It includes details about the appointment
+ * date, timeslot, patient, provider, and the specific imaging room.
+ *
+ * @author Gursimar Singh
+ */
 public class Imaging extends Appointment {
 
     private Radiology room; // The imaging room for the appointment (e.g., X-ray, ultrasound, CAT scan)

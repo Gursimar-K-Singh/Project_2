@@ -9,7 +9,6 @@ package model;
  * Enum constants represent locations such as BRIDGEWATER, EDISON, PISCATAWAY, PRINCETON, MORRISTOWN, and CLARK.
  * Each constant holds information about the county and zip code of the location.
  *
- * @author AparnaSrinivas
  * @author GursimarSingh
  */
 public enum Location {

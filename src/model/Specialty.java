@@ -1,6 +1,18 @@
 package model;
 
-//@author AparnaSrinivas @author GursimarSingh
+/**
+ * Represents medical specialties with associated charges.
+ *
+ * Specialties include:
+ * - FAMILY: 250
+ * - PEDIATRICIAN: 300
+ * - ALLERGIST: 350
+ *
+ * Provides methods to retrieve the charge and a string representation
+ * of the specialty name.
+ *
+ * @author Gursimar Singh
+ */
 public enum Specialty {
     FAMILY(250),
     PEDIATRICIAN(300),
@@ -20,13 +32,6 @@ public enum Specialty {
         return name();
     }
 
-
-    public static void main(String[] args) {
-        // Test each specialty and print the amount due
-        for (Specialty specialty : Specialty.values()) {
-            System.out.println(specialty.toString());
-        }
-    }
 
 
 }

@@ -4,7 +4,7 @@ package model;
  * The Technician class represents a specific type of healthcare provider.
  * It extends the Provider class and encapsulates the charging rate per visit.
  *
- * @author GursimarSingh, AparnaSrinivas
+ * @author GursimarSingh
  */
 public class Technician extends Provider {
 

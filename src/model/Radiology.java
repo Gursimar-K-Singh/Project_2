@@ -1,5 +1,15 @@
 package model;
 
+/**
+ * Represents different types of radiology imaging services.
+ *
+ * This enum defines the available imaging services, including CT scans,
+ * ultrasounds, and X-rays. Each service has a name that can be retrieved
+ * for display or processing purposes.
+ *
+ * @author Gursimar Singh
+ */
+
 public enum Radiology {
     CATSCAN("CT Scan"),
     ULTRASOUND("Ultrasound"),

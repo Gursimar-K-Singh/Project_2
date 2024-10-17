@@ -10,7 +10,7 @@ import java.util.Calendar;
  *
  * Constants are defined for the leap year calculation and the number of days in specific months.
  *
- * @author AparnaSrinivas,GursimarSingh
+ * @author GursimarSingh
  */
 public class Date implements Comparable<Date> {
     private int year, month, day;
@@ -228,22 +228,6 @@ public class Date implements Comparable<Date> {
         return dateToCheck.before(sixMonthsLater) || dateToCheck.equals(sixMonthsLater);
     }
 
-    public static void main(String[] args) {
-        // Test cases
-        Date date1 = new Date(1, 32, 2025);// Invalid as Jan has only 31 days
-        Date date2 = new Date(2, 29, 2025);//Invalid as 2025 is not a leap yr
-        Date date3 = new Date(13, 13, 2024);//Invalid as the date is present in the past
-        Date date4 = new Date(9, 13, 1854);//Invalid as year is less than 1900
-        Date date5 = new Date(10, 31, 2024);//Valid calendar date
-        Date date6 = new Date(12, 13, 2024);
-
-        System.out.println(date1.isValid());
-        System.out.println(date2.isValid());
-        System.out.println(date3.isValid());
-        System.out.println(date4.isValid());
-        System.out.println(date5.isValid());
-        System.out.println(date6.isValid());
-    }
 }
 
 

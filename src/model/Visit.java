@@ -1,6 +1,15 @@
 package model;
 
-//@author AparnaSrinivas @author GursimarSingh
+/**
+ * Represents a visit containing an appointment and a reference to the next visit.
+ *
+ * This class is used to create linked structures of visits for appointment management.
+ * It provides constructors to initialize the visit with an appointment and optionally
+ * link to the next visit. Getters and setters are available to access and modify
+ * the appointment and next visit.
+ *
+ * @author Gursimar Singh
+ */
 public class Visit {
     private Appointment appointment;
     private Visit next;

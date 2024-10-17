@@ -6,19 +6,12 @@ import java.util.Calendar;
 import java.util.Scanner;
 import util.List; // Import the new List class
 import util.CircleList;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 public class ClinicManager {
 
-    private  List<Provider> providerList;
+    private List<Provider> providerList;
     private List<Appointment> appointmentList;
     private CircleList<Technician> technicianList;
-
-    // Constants for calculating a date within 6 months
-    private static final int TOTAL_MONTHS_IN_YEAR = 12;
-    private static final int HALF_YEAR_IN_MONTHS = 6;
-    //public static final Timeslot[] TIME_SLOTS = generateTimeslots();
 
     public ClinicManager() {
         providerList = new List<>();
@@ -68,18 +61,6 @@ public class ClinicManager {
         }
     }
 
-    private Doctor getDocByNPI(String npi) {
-        for (int i = 0; i < providerList.size(); i++) {
-            Provider provider = providerList.get(i);
-            if (provider instanceof Doctor && ((Doctor) provider).getNpi().equals(npi)) {
-                return (Doctor) provider; // Return the found Doctor
-            }
-        }
-        return null; // No doctor found with that NPI
-    }
-
-
-
     /**
      * Converts a line of text into a Provider object.
      *
@@ -119,20 +100,6 @@ public class ClinicManager {
         return null;
     }
 
-    /**
-     * Converts a string to a Location enum value.
-     *
-     * @param locationString The string representation of the location.
-     * @return The matching Location enum, or throws an exception if invalid.
-     */
-    public Location parseLocation(String locationString) {
-        for (Location loc : Location.values()) {
-            if (loc.name().equalsIgnoreCase(locationString)) {
-                return loc;
-            }
-        }
-        throw new IllegalArgumentException("Invalid Location '" + locationString + "'.");
-    }
 
     /**
      * Converts a string to a Location enum value.
@@ -224,15 +191,15 @@ public class ClinicManager {
             switch (command) {
                 case "D": scheduleOfficeAppointment(tokens); break;
                 case "T": scheduleImagingAppointment(tokens); break;
-                case "C": cancelAppointment(tokens); break;
                 case "R": rescheduleAppointment(tokens); break;
+                case "C": cancelAppointment(tokens); break;
                 case "PO": printOfficeAppointments() ; break;
                 case "PI": printImagingAppointments(); break;
-                case "PC": printProviderCredits();; break;
                 case "PA": printAppointmentsByDateTimeProvider(); break;
                 case "PP": printAppointmentsByPatient(); break;
                 case "PL": printAppointmentsByCountyDateTime(); break;
-                case "PS": printBillingStatement();;;break;
+                case "PS": printBillingStatement();break;
+                case "PC": printProviderCredits(); break;
                 case "Q":
                 {
                     System.out.println("Clinic Manager is terminated.");
@@ -246,6 +213,17 @@ public class ClinicManager {
         scanner.close();
     }
 
+    /**
+     * Validates the provided appointment date.
+     * Checks if the appointment date is:
+     * - A valid calendar date.
+     * - Not today or in the past.
+     * - Not on a weekend (Saturday or Sunday).
+     * - Within six months from the current date.
+     *
+     * @param dateStr the appointment date as a string.
+     * @return {@code true} if the date is valid; {@code false} otherwise.
+     */
     private static boolean validateAppointmentDate(String dateStr) {
         Date appointmentDate = convertToDate(dateStr);
 
@@ -272,28 +250,6 @@ public class ClinicManager {
         return true;
     }
 
-    private static boolean isNumeric(String str) {
-        return str != null && str.matches("\\d+");
-    }
-
-    /**
-     * Parses a timeslot from a string representation.
-     *
-     * @param timeslotStr The string representation of the timeslot (1 to 12).
-     * @return The corresponding Timeslot object, or null if the input is invalid.
-     */
-    private Timeslot calcTimeslot(String timeslotStr) {
-        try {
-            int slotNumber = Integer.parseInt(timeslotStr.trim()); // Parse the string as an integer
-            if (slotNumber >= 1 && slotNumber <= Timeslot.TIME_SLOTS.length) {
-                return Timeslot.TIME_SLOTS[slotNumber - 1]; // Convert slot number to zero-based index
-            } else {
-                return null; // Invalid slot number
-            }
-        } catch (NumberFormatException e) {
-            return null; // If the input is not a valid number
-        }
-    }
     /**
      * Parses a timeslot from a string representation.
      *
@@ -322,6 +278,7 @@ public class ClinicManager {
     private void rescheduleAppointment(String[] tokens) {
         // Check if the number of arguments is valid for the R command
         if (tokens.length != 7) {
+            System.out.println("Missing data tokens.");
             return;
         }
 
@@ -527,16 +484,26 @@ public class ClinicManager {
         }
     }
 
+    /**
+     * Schedules an imaging appointment based on the provided command tokens.
+     *
+     * <p>This method validates the command input, extracts appointment details,
+     * checks for existing appointments, and assigns a technician. If successful,
+     * it adds the appointment to the schedule and displays the booking information.
+     * If any validation fails, appropriate messages are shown to the user.</p>
+     *
+     * @param tokens An array of strings containing command input for scheduling
+     *               the imaging appointment, including date, timeslot, patient
+     *               information, and imaging service.
+     */
     private void scheduleImagingAppointment(String[] tokens) {
         // Validate command tokens for T (Imaging appointment)
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("T")) {
             return;
         }
 
-        // Get appointment date from command line
-
         if (!validateAppointmentDate(tokens[1])) return;
-        Date appointmentDate = convertToDate(tokens[1]);
+        Date scheduledDate  = convertToDate(tokens[1]);
 
         // Parse timeslot
         Timeslot timeslot = parseTimeslot(tokens[2]);
@@ -554,7 +521,7 @@ public class ClinicManager {
         Patient patient = new Patient(patientProfile);
 
         // Check if the patient already has an appointment at this time
-        if (hasExistingAppointment(patient, appointmentDate, timeslot)) {
+        if (hasExistingAppointment(patient, scheduledDate , timeslot)) {
             System.out.println(patientProfile.toString() + " has an existing appointment at the same time slot.");
             return;
         }
@@ -574,11 +541,11 @@ public class ClinicManager {
         }
 
         // Create and book the imaging appointment
-        Imaging imagingAppointment = new Imaging(appointmentDate, timeslot, patient, assignedTechnician, room);
+        Imaging imagingAppointment = new Imaging(scheduledDate , timeslot, patient, assignedTechnician, room);
         appointmentList.add(imagingAppointment);
 
         // Output the correctly formatted booking information
-        System.out.println(appointmentDate + " " + timeslot + " " + patient + " " + assignedTechnician + "[" + room + "] booked.");
+        System.out.println(scheduledDate  + " " + timeslot + " " + patient + " " + assignedTechnician + "[" + room + "] booked.");
     }
 
     /**
@@ -653,19 +620,17 @@ public class ClinicManager {
     }
 
     /**
-     * Schedules an office appointment based on the provided command tokens.
-     * This method processes the tokens representing the appointment details,
-     * validates the inputs, and creates a new appointment if all checks pass.
+     * Schedules an imaging appointment based on the provided command tokens.
      *
-     * @param tokens An array of strings representing the command and appointment details.
-     *               The expected format is:
-     *               tokens[0] - Command (should be "D")
-     *               tokens[1] - Appointment date in the appropriate format
-     *               tokens[2] - Timeslot for the appointment
-     *               tokens[3] - Patient's first name
-     *               tokens[4] - Patient's last name
-     *               tokens[5] - Patient's date of birth
-     *               tokens[6] - National Provider Identifier (NPI) of the doctor
+     * <p>This method validates the command input, extracts appointment details,
+     * checks for existing appointments, and assigns a technician. If successful,
+     * it adds the appointment to the schedule and displays the booking information.
+     * If any validation fails, appropriate messages are shown to the user.</p>
+     *
+     * @param tokens An array of strings containing command input for scheduling
+     *               the imaging appointment, including the command,
+     *               appointment date, timeslot, patient's first name, last name,
+     *               date of birth, and imaging service.
      */
     private void scheduleOfficeAppointment(String[] tokens) {
         // Check for D command
@@ -708,6 +673,17 @@ public class ClinicManager {
         System.out.println(newAppointment.toString() + " booked.");
     }
 
+    /**
+     * Validates the provided date of birth (DOB).
+     *
+     * Checks if the DOB is:
+     * - A valid date.
+     * - Not today's date.
+     * - Not a future date.
+     *
+     * @param dobStr the date of birth as a string.
+     * @return {@code true} if valid; {@code false} otherwise.
+     */
     private static boolean checkDOB(String dobStr) {
         Date dob = convertToDate(dobStr);
 
@@ -774,6 +750,12 @@ public class ClinicManager {
         return true; // Appointment can be scheduled
     }
 
+    /**
+     * Prints a list of office appointments ordered by county, date, and time.
+     * If there are no appointments, a message indicating that the schedule is empty
+     * will be displayed. Appointments of type {@link Imaging} will be excluded from
+     * the output.
+     */
     private void printOfficeAppointments() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
@@ -811,7 +793,16 @@ public class ClinicManager {
             System.out.println("** end of list **");
         }
     }
-
+    /**
+     * Displays a list of appointments sorted by patient.
+     * If the schedule calendar is empty, a message will indicate that there are
+     * no appointments scheduled. When appointments are present, this method sorts
+     * them by patient name and presents the details in a clear format.
+     * The sorting is performed using a custom sorting method where 'P' indicates
+     * that the appointments should be organized by patient. After sorting, a
+     * complete list of appointments is displayed, followed by a note marking
+     * the end of the list.
+     */
     private void printAppointmentsByPatient() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
@@ -827,6 +818,16 @@ public class ClinicManager {
         }
     }
 
+    /**
+     * Displays a list of appointments sorted by county, date, and time.
+     * If there are no appointments scheduled, you'll see a friendly message
+     * letting you know that the schedule calendar is empty. When there are
+     * appointments, the method will sort them by county and show you the
+     * details in an easy-to-read format.
+     * The sorting is handled by our custom sorting method, where 'L' stands
+     * for sorting by county. Once sorted, you'll get a complete list,
+     * followed by a note that indicates the end of the list.
+     */
     private void printAppointmentsByCountyDateTime() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
@@ -842,6 +843,9 @@ public class ClinicManager {
         }
     }
 
+    /**
+     * Prints the billing statement ordered by patient. If the appointment list is empty, it notifies the user.
+     */
     private void printBillingStatement() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
@@ -857,6 +861,48 @@ public class ClinicManager {
         String[] printedNames = new String[appointmentList.size()];
         int printedCount = 0;
 
+        // Process the appointments
+        processAppointments(printedNames, printedCount);
+
+        clearAppointmentList();
+        System.out.println("** end of list **");
+    }
+
+    /**
+     * Clears the appointment list.
+     */
+    private void clearAppointmentList() {
+        while (!appointmentList.isEmpty()) {
+            Appointment appointment = appointmentList.get(0);
+            appointmentList.remove(appointment);
+        }
+    }
+
+    /**
+     * Adds all visits associated with a patient to the current patient object.
+     * @param currentPatient the patient object to which visits are added
+     * @param patient the original patient whose visits are to be added
+     * @param index the starting index for iteration
+     */
+    private void addPatientVisits(Patient currentPatient, Patient patient, int index) {
+        for (int k = index; k < appointmentList.size(); k++) {
+            Appointment visitAppointment = appointmentList.get(k);
+            if (visitAppointment.getPatient().equals(patient)) {
+                Visit visit = new Visit(visitAppointment);
+                currentPatient.addVisit(visit); // Assuming getVisit() returns the Visit object
+            } else {
+                break; // Stop when reaching a different patient
+            }
+        }
+    }
+
+    /**
+     * Processes the appointments to generate billing statements.
+     *
+     * @param printedNames An array to track unique patient identifiers that have been printed.
+     * @param printedCount A count of how many unique patients have been printed.
+     */
+    private void processAppointments(String[] printedNames, int printedCount) {
         // Iterate through the sorted appointmentList
         for (int i = 0; i < appointmentList.size(); i++) {
             Appointment appointment = appointmentList.get(i);
@@ -886,17 +932,7 @@ public class ClinicManager {
             if (!alreadyPrinted) {
                 // Create a new Patient object for this patient (optional, depends on your logic)
                 Patient currentPatient = new Patient(patient.getProfile());
-
-                // Add all visits associated with this patient
-                for (int k = i; k < appointmentList.size(); k++) {
-                    Appointment visitAppointment = appointmentList.get(k);
-                    if (visitAppointment.getPatient().equals(patient)) {
-                        Visit visit = new Visit(visitAppointment);
-                        currentPatient.addVisit(visit); // Assuming getVisit() returns the Visit object
-                    } else {
-                        break; // Stop when reaching a different patient
-                    }
-                }
+                addPatientVisits(currentPatient, patient, i);
 
                 // Calculate the total charges for this patient
                 int totalCharge = currentPatient.charge(); // Calculate the total charges from visits
@@ -909,23 +945,137 @@ public class ClinicManager {
                 printedNames[printedCount++] = uniqueIdentifier;
             }
         }
-
-
-
-        System.out.println("** end of list **");
     }
 
+    /**
+     * Prints the expected credit amounts for providers based on the appointments.
+     * If the appointment list is empty, it notifies the user.
+     */
     private void printProviderCredits() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
             return; // Exit the method early if there are no appointments
-        } else {
-
         }
 
+        System.out.println("\n** Expected Credit Amounts for Providers **");
 
+        // Extract and sort unique providers
+        List<Provider> uniqueProviders = getUniqueProviders();
+
+        // Track printed providers
+        String[] printedProviders = new String[uniqueProviders.size()];
+        int printedCount = 0;
+
+        // Iterate through the sorted uniqueProviders
+        for (Provider provider : uniqueProviders) {
+            if (provider.getProfile() == null) {
+                continue; // Skip if provider profile is not available
+            }
+
+            String uniqueIdentifier = getUniqueIdentifier(provider);
+
+            // Check if this unique identifier has already been printed
+            if (!hasBeenPrinted(printedProviders, printedCount, uniqueIdentifier)) {
+                int totalCharge = calculateTotalCharge(provider);
+
+                printProviderCredit(provider, totalCharge);
+                printedProviders[printedCount++] = uniqueIdentifier; // Avoid duplicates
+            }
+        }
+
+        System.out.println("** end of list **");
     }
 
+    /**
+     * Extracts unique providers from the appointment list and sorts them by last name.
+     *
+     * @return A list of unique providers.
+     */    private List<Provider> getUniqueProviders() {
+        List<Provider> uniqueProviders = new List<>();
+        for (int i = 0; i < appointmentList.size(); i++) {
+            Appointment appointment = appointmentList.get(i);
+            Provider provider = (Provider) appointment.getProvider();
+            if (provider != null && !uniqueProviders.contains(provider)) {
+                uniqueProviders.add(provider);
+            }
+        }
+        sort.provider(uniqueProviders); // Sort the list by last name
+        return uniqueProviders;
+    }
+
+    /**
+     * Creates a unique identifier for the provider based on their type.
+     *
+     * @param provider The provider for which to create the unique identifier.
+     * @return A string representing the unique identifier for the provider.
+     */
+    private String getUniqueIdentifier(Provider provider) {
+        if (provider instanceof Doctor doctor) {
+            return doctor.getName() + " " + doctor.getSpecialty(); // For Doctor
+        } else if (provider instanceof Technician technician) {
+            return technician.getName(); // For Technician
+        }
+        return " ";
+    }
+
+    /**
+     * Checks if a provider has already been printed in the billing statement.
+     *
+     * @param printedProviders An array of printed provider names.
+     * @param printedCount The count of providers that have already been printed.
+     * @param uniqueIdentifier The unique identifier of the provider to check.
+     * @return true if the provider has already been printed; false otherwise.
+     */
+    private boolean hasBeenPrinted(String[] printedProviders, int printedCount, String uniqueIdentifier) {
+        for (int j = 0; j < printedCount; j++) {
+            if (printedProviders[j].equals(uniqueIdentifier)) {
+                return true; // Already printed
+            }
+        }
+        return false; // Not printed yet
+    }
+
+    /**
+     * Calculates the total charge for a provider based on their appointments.
+     *
+     * @param provider The provider for whom to calculate the total charge.
+     * @return The total charge for the provider.
+     */
+    private int calculateTotalCharge(Provider provider) {
+        int totalCharge = 0;
+        for (int k = 0; k < appointmentList.size(); k++) {
+            Appointment visitAppointment = appointmentList.get(k);
+            if (visitAppointment.getProvider().equals(provider)) {
+                if (provider instanceof Doctor doctor) {
+                    totalCharge += doctor.rate(); // Rate for Doctor
+                } else if (provider instanceof Technician technician) {
+                    totalCharge += technician.rate(); // Rate for Technician
+                }
+            }
+        }
+        return totalCharge;
+    }
+
+    /**
+     * Prints the credit details for a provider based on their total charges.
+     *
+     * @param provider The provider whose credit details are to be printed.
+     * @param totalCharge The total amount due to the provider.
+     */
+    private void printProviderCredit(Provider provider, int totalCharge) {
+        if (provider instanceof Doctor doctor) {
+            System.out.printf("%s [Specialty: %s] [Expected credit: $%d.00]%n",
+                    doctor.getName(), doctor.getSpecialty(), totalCharge);
+        } else if (provider instanceof Technician technician) {
+            System.out.printf("%s [Rate per Visit: $%d] [Expected credit: $%d.00]%n",
+                    technician.getName(), technician.rate(), totalCharge);
+        }
+    }
+
+    /**
+     * Prints the list of imaging appointments ordered by county/date/time.
+     * If the appointment list is empty, it notifies the user.
+     */
     private void printImagingAppointments() {
         if (appointmentList.isEmpty()) {
             System.out.println("Schedule calendar is empty.");
@@ -943,21 +1093,6 @@ public class ClinicManager {
             System.out.println("** end of list **");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

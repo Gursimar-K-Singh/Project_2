@@ -8,7 +8,6 @@ import java.util.Iterator;
  *
  * @param <E> The type of elements stored in the list (e.g., Appointment, Integer, String, etc.).
  *
- * @author AparnaSrinivas
  * @author GursimarSingh
  */
 

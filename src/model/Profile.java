@@ -14,7 +14,6 @@ import util.Date;
  * The toString() method returns a string representation of the profile in the format:
  * "FirstName LastName DateOfBirth".
  *
- * @author AparnaSrinivas
  * @author GursimarSingh
  */
 public class Profile implements Comparable<Profile> {

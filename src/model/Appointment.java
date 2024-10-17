@@ -9,7 +9,6 @@ import util.Date;
  * about the appointment date, timeslot, the patient, and the provider.
  * Implements the Comparable interface to compare appointments based on date, timeslot, and patient profile.
  *
- * @author AparnaSrinivas
  * @author GursimarSingh
  */
 
@@ -27,7 +26,6 @@ public class Appointment implements Comparable<Appointment> {
      * @param patient The profile of the patient.
      * @param provider The provider associated with the appointment.
      */
-
     public Appointment(Date date, Timeslot timeslot, Person patient, Person provider) {
         this.date = date;
         this.timeslot = timeslot;

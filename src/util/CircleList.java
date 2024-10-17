@@ -1,4 +1,15 @@
 package util;
+/**
+ * Represents a circular linked list that allows traversal of elements in a circular manner.
+ *
+ * This class extends the generic List class and maintains an index to track the current
+ * position in the list. It provides methods to retrieve the next element in a circular
+ * fashion and to reset the index back to the start of the list.
+ *
+ * @param <E> the type of elements in the list
+ *
+ * @author Gursimar Singh
+ */
 
 public class CircleList<E> extends List<E> {
     private int currentIndex;
@@ -18,9 +29,5 @@ public class CircleList<E> extends List<E> {
         return nextElement;
     }
 
-    // Resets the index to start over
-    public void reset() {
-        currentIndex = 0;
-    }
 
 }

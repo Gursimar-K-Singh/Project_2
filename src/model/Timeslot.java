@@ -7,7 +7,7 @@ package model;
  * common appointment times.
  * It implements the Comparable interface, allowing timeslots to be compared based on
  * chronological order (hours and minutes).
- * @author AparnaSrinivas
+ *
  * @author GursimarSingh
  */
  public class Timeslot implements Comparable<Timeslot> {

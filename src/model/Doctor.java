@@ -5,7 +5,7 @@ package model;
  * It extends the Provider class and encapsulates the rate per visit based on specialty,
  * along with a unique National Provider Identification (NPI) number.
  *
- * @author AparnaSrinivas, GursimarSingh
+ * @author GursimarSingh
  */
 
 public class Doctor extends Provider {

@@ -2,11 +2,25 @@ package util;
 
 import model.Appointment;
 import model.Provider;
-import java.io.File;
-import java.util.Scanner;
 
 
+/**
+ * Utility class that provides sorting methods for lists of appointments and providers.
+ * This class contains static methods to sort appointments and providers based on
+ * various criteria such as date, patient, and provider information.
+ *
+ * @author Gursimar Singh
+ */
 public class sort {
+    /**
+     * Sorts a list of appointments based on the specified key.
+     *
+     * @param list The list of appointments to be sorted.
+     * @param key The sorting key, which determines the sorting criteria.
+     *            'A' for appointment date, 'P' for patient,
+     *            'L' for county name, 'O' for office appointments,
+     *            and 'I' for imaging appointments.
+     */
     public static void appointment(List<Appointment> list, char key) {
         List<Appointment> sortedList = new List<>();
 
@@ -77,6 +91,14 @@ public class sort {
         return comparison;
     }
 
+    /**
+     * Compares two appointments based on their date and time.
+     *
+     * @param current The current appointment to compare.
+     * @param smallest The smallest appointment found so far.
+     * @return A negative integer, zero, or a positive integer as the current appointment
+     *         is less than, equal to, or greater than the smallest appointment.
+     */
     private static int compareDateAndTime(Appointment current, Appointment smallest) {
         int comparison = current.getDate().compareTo(smallest.getDate());
         if (comparison == 0) {
@@ -85,6 +107,11 @@ public class sort {
         return comparison;
     }
 
+    /**
+     * Sorts a list of providers based on their last and first names.
+     *
+     * @param list The list of providers to be sorted.
+     */
     public static void provider(List<Provider> list) {
         List<Provider> sortedList = new List<>();
 
