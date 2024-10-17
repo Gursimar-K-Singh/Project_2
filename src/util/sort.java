@@ -66,8 +66,7 @@ public class sort {
                 if (comparison == 0) { // If the dates are the same
                     comparison = current.getTimeslot().compareTo(smallest.getTimeslot());
                     if (comparison == 0) { // If the timeslots are the same
-                        comparison = current.getProvider().getProfile().getLname().compareTo(
-                                smallest.getProvider().getProfile().getLname());
+                        comparison = current.getProvider().getProfile().getLname().compareTo(smallest.getProvider().getProfile().getLname());
                     }
                 }
                 break;
@@ -84,6 +83,9 @@ public class sort {
                         ((Provider) smallest.getProvider()).getLocation().getCounty());
                 if (comparison == 0) {
                     comparison = compareDateAndTime(current, smallest);
+                    if (comparison == 0){
+                        comparison = current.getPatient().compareTo(smallest.getPatient()); // Compare by patient profile
+                    }
                 }
                 break;
         }
