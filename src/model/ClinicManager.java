@@ -1,6 +1,8 @@
 package model;
 import util.Date;
 import util.sort;
+
+import java.util.Calendar;
 import java.util.Scanner;
 import util.List; // Import the new List class
 import util.CircleList;
@@ -548,6 +550,10 @@ public class ClinicManager {
             return;
         }
 
+        if (!checkDOB(tokens[5])) {
+            return; // Stop if the DOB is invalid
+        }
+
         // Get patient information from the command line and create a Patient object
         Profile patientProfile = new Profile(tokens[3].trim(), tokens[4].trim(), convertToDate(tokens[5]));
         Patient patient = new Patient(patientProfile);
@@ -673,14 +679,17 @@ public class ClinicManager {
             return;
         }
 
-        // Get appointment date from command line
-        Date appointmentDate = convertToDate(tokens[1]);
+
         if (!validateAppointmentDate( tokens[1])) return;
+        Date appointmentDate = convertToDate(tokens[1]);
 
         Timeslot timeslot = parseTimeslot(tokens[2]);
         if (timeslot == null) {
             System.out.println(tokens[2] + " is not a valid time slot.");
             return;
+        }
+        if (!checkDOB(tokens[5])) {
+            return; // Stop if the DOB is invalid
         }
 
         // Get patient information from the command line and create a Patient object
@@ -702,6 +711,32 @@ public class ClinicManager {
 
         appointmentList.add(newAppointment);
         System.out.println(newAppointment.toString() + " booked.");
+    }
+
+    private static boolean checkDOB(String dobStr) {
+        Date dob = convertToDate(dobStr);
+
+        // Check if the date is null, meaning it couldn't be parsed correctly
+        if (dob == null || !dob.isValid()) {
+            System.out.println("Patient dob: " + dobStr + " is not a valid calendar date.");
+            return false; // Invalid date
+        }
+
+        // Check if the DOB is today
+        if (dob.isToday()) {
+            System.out.println(dobStr + " is today or a date after today.");
+            return false; // Assuming DOB cannot be today, return false
+        }
+
+        // Check if the DOB is in the future
+        Calendar today = Calendar.getInstance();
+        Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
+        if (dob.compareTo(todayDate) > 0) {
+            System.out.println(dobStr + " is today or a date after today.");
+            return false;
+        }
+
+        return true; // DOB is valid
     }
 
     /**
