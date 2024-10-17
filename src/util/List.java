@@ -12,7 +12,7 @@ import java.util.Iterator;
  */
 
 public class List<E> implements Iterable<E>{
-    private static final int INITIAL_CAPACITY = 4; // Initial capacity as per the requirement
+    private static final int INITIAL_CAPACITY = 4; 
     private E[] objects;
     private int size;
 
@@ -78,7 +78,7 @@ public class List<E> implements Iterable<E>{
      */
     public void add(E e) {
         if (size == objects.length) {
-            grow(); // Grow the array if needed
+            grow();
         }
         objects[size] = e;
         size++;
@@ -95,7 +95,7 @@ public class List<E> implements Iterable<E>{
         for (int i = index; i < size - 1; i++) {
             objects[i] = objects[i + 1]; // Shift elements to the left
         }
-        objects[size - 1] = null; // Nullify the last element
+        objects[size - 1] = null; // make last element null
         size--;
     }
 
@@ -180,7 +180,7 @@ public class List<E> implements Iterable<E>{
         @Override
         public E next() {
             if (!hasNext()) {
-                return null; // No more elements, so return null
+                return null; // No more elements,
             }
             return objects[currentIndex++];
         }
