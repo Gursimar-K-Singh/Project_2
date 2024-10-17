@@ -12,7 +12,7 @@ import java.util.Iterator;
  */
 
 public class List<E> implements Iterable<E>{
-    private static final int INITIAL_CAPACITY = 4; 
+    private static final int INITIAL_CAPACITY = 4;
     private E[] objects;
     private int size;
 

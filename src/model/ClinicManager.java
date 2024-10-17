@@ -299,8 +299,8 @@ public class ClinicManager {
         int slotIndex;
         try {
             slotIndex = Integer.parseInt(timeslotStr.trim()); // Parse the string as an integer
-            if (slotIndex >= 1 && slotIndex <= Timeslot.TIME_SLOTS.length) {
-                return Timeslot.TIME_SLOTS[slotIndex - 1]; // Convert slot number to zero-based index
+            if (slotIndex >= 1 && slotIndex <= Timeslot.SLOTS.length) {
+                return Timeslot.SLOTS[slotIndex - 1]; // Convert slot number to zero-based index
             } else {
                 return null; // Invalid slot number
             }
