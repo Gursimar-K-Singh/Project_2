@@ -499,6 +499,7 @@ public class ClinicManager {
     private void scheduleImagingAppointment(String[] tokens) {
         // Validate command tokens for T (Imaging appointment)
         if (tokens.length != 7 || !tokens[0].equalsIgnoreCase("T")) {
+            System.out.println("Missing Date tokens");
             return;
         }
 
@@ -513,7 +514,7 @@ public class ClinicManager {
         }
 
         if (!checkDOB(tokens[5])) {
-            return; // Stop if the DOB is invalid
+            return;
         }
 
         // Get patient information from the command line and create a Patient object
@@ -695,7 +696,7 @@ public class ClinicManager {
 
         // Check if the DOB is today
         if (dob.isToday()) {
-            System.out.println(dobStr + " is today or a date after today.");
+            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
             return false; // Assuming DOB cannot be today, return false
         }
 
@@ -703,7 +704,7 @@ public class ClinicManager {
         Calendar today = Calendar.getInstance();
         Date todayDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.YEAR));
         if (dob.compareTo(todayDate) > 0) {
-            System.out.println(dobStr + " is today or a date after today.");
+            System.out.println("Patient dob: " + dobStr + " is today or a date after today.");
             return false;
         }
 
